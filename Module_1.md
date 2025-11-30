@@ -20,5 +20,15 @@ hostnamectl set-hostname <полное_доменное_имя>; exec bash
 hostnamectl set-hostname isp.au-team.irpo; exec bash
 # HQ-RTR
 hostnamectl set-hostname hq-rtr.au-team.irpo; exec bash
+# HQ-SRV
+hostnamectl set-hostname hq-rtr.au-team.irpo; exec bash
+# HQ-CLI
+hostnamectl set-hostname hq-cli.au-team.irpo; exec bash
+# BR-RTR
+hostnamectl set-hostname br-rtr.au-team.irpo; exec bash
+# BR-SRV
+hostnamectl set-hostname br-srv.au-team.irpo; exec bash
+
+
 ```
-> Далее остальным машинам имена выдаются по анлогии
+> ⚠️ **Хоть в задании и не указано дать название всем устройствам, но ISP для корретного фукнционирования тоже нужно выдать полное доменное имя, лучше делать именно через эту команду, в модуле 2 будет другой подход, но здесь достаточно переименования без ребута машин, команда применит название сразу.**
