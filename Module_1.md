@@ -20,5 +20,5 @@ hostnamectl set-hostname <полное_доменное_имя>; exec bash
 hostnamectl set-hostname isp.au-team.irpo; exec bash
 # HQ-RTR
 hostnamectl set-hostname hq-rtr.au-team.irpo; exec bash
-
+```
 > Далее остальным машинам имена выдаются по анлогии
