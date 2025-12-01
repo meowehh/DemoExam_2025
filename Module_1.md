@@ -49,29 +49,15 @@ hostnamectl set-hostname br-srv.au-team.irpo; exec bash
 mkdir /etc/net/ifaces/ens19
 mkdir /etc/net/ifaces/ens20
 vim /etc/net/ifaces/ens19/ipv4address
-```
-Указываем: 172.16.40.1/28
-```bash
+172.16.40.1/28
 vim /etc/net/ifaces/ens20/ipv4address
-```
-Указываем: 172.16.50.1/28
-```bash
+172.16.50.1/28
 vim /etc/net/ifaces/ens19/options
-```
-Указываем:
-```bash
 BOOTPROTO=static
 TYPE=eth
-```
-```bash
 vim /etc/net/ifaces/ens20/options
-```
-Указываем:
-```bash
 BOOTPROTO=static
 TYPE=eth
-```
-```bash
 systemctl restart network
 ip -c -br a
 ```
