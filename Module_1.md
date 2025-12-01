@@ -76,3 +76,66 @@ ens20            UP             172.16.50.1/28 fe80::be24:11ff:fe03:76a0/64
 ```
 
 > ⚠️ 💡 **Примечание**: Для ens18 вывод может отличаться из-за того что у всех этот интерфейс зависит от их собственной локальной сети, так как это интерфейс через который идет выход в интернет с помощью Bridge из Proxmox в VMware, в VMware обязательно нужно было указать Bridge в типе сетевого подключения, тип NAT или создание отдельной Network внутри VMware может вызывать нестабильность в работе!
+
+
+```bash
+# HQ-RTR
+mkdir /etc/net/ifaces/ens18
+mkdir /etc/net/ifaces/ens19
+mkdir /etc/net/ifaces/ens19.10
+mkdir /etc/net/ifaces/ens19.20
+mkdir /etc/net/ifaces/ens19.99
+```
+```bash
+vim /etc/net/ifaces/ens18/ipv4address
+172.16.40.2/28
+vim /etc/net/ifaces/ens19.10/ipv4address
+192.168.10.1/27
+vim /etc/net/ifaces/ens19.20/ipv4address
+192.168.20.65/28
+vim /etc/net/ifaces/ens19.99/ipv4address
+192.168.99.91/29
+```
+```bash
+vim /etc/net/ifaces/ens18/options
+BOOTPROTO=static
+TYPE=eth
+vim /etc/net/ifaces/ens19/options
+BOOTPROTO=none
+TYPE=eth
+vim /etc/net/ifaces/ens19.10/options
+BOOTPROTO=static
+TYPE=vlan
+VID=10
+HOST=ens19
+vim /etc/net/ifaces/ens19.20/options
+BOOTPROTO=static
+TYPE=vlan
+VID=20
+vim /etc/net/ifaces/ens19.99/options
+BOOTPROTO=static
+TYPE=vlan
+VID=99
+```
+```bash
+vim /etc/net/ifaces/ens18/ipv4route
+default via 172.16.40.1
+```
+```bash
+vim /etc/net/ifaces/ens18/resolvconf
+77.88.8.8
+```
+```bash
+systemctl restart network
+ip -c -br a
+```
+Должен быть такой вывод у команды:
+```bash
+lo               UNKNOWN        127.0.0.1/8 ::1/128 
+ens18            UP             172.16.40.2/28 fe80::be24:11ff:fe5e:1371/64 
+ens19            UP             fe80::be24:11ff:fea9:5f29/64 
+ens19.10@ens19   UP             192.168.10.1/27 fe80::be24:11ff:fea9:5f29/64 
+ens19.20@ens19   UP             192.168.20.65/28 fe80::be24:11ff:fea9:5f29/64 
+ens19.99@ens19   UP             192.168.99.91/29 fe80::be24:11ff:fea9:5f29/64 
+```
+> ⚠️ 💡 **Примечание**: Так как VLAN созданы через network внутри Proxmox, обязательно идем в веб панель Proxmox VE, заходим в раздел Server View > Datacenter > pve. В этом разделе в открытом списке выбираем 10103,10104 машины (HQ-SRV,HQ-CLI), заходим в настройки во вкладку Hardware, меняем в графе Network Device (net0) VLAN tag, с того который там указан на 10 для HQ-CLI, и на 20 для HQ-SRV. Перезапускать машины не нужно.
