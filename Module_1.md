@@ -59,14 +59,18 @@ vim /etc/net/ifaces/ens20/ipv4address
 vim /etc/net/ifaces/ens19/options
 ```
 Указываем:
+```bash
 BOOTPROTO=static
 TYPE=eth
+```
 ```bash
 vim /etc/net/ifaces/ens20/options
 ```
 Указываем:
+```bash
 BOOTPROTO=static
 TYPE=eth
+```
 ```bash
 systemctl restart network
 ip -c -br a
