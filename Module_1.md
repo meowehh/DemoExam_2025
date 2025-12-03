@@ -275,3 +275,48 @@ ens18            UP             192.168.30.2/28 fe80::be24:11ff:fe3c:a3dd/64
 ```
 
 > ⚠️ 💡 **Примечание!**: HQ-CLI будет настроен позднее так как там будет использоваться DHCP настройка, на данном этапе теперь требуется настроить проброс портов чтобы пинг начал ходить между устройствами и появился доступ в интернет со всех машин, так же все отчеты будут приведны в отдельном файле, сейчас заполнять ничего не требуется, несмотря на задание.
+
+## 📋 Задание 2: Настройка ISP
+```bash
+# ISP
+vim /etc/net/sysctl.conf
+net.ipv4.ip_forward = 1
+
+systemctl restart network
+```
+```shell
+apt-get update && apt-get install iptables -y
+iptables -t nat -A POSTROUTING -o ens18 -s 172.16.40.0/28 -j MASQUERADE
+iptables -t nat -A POSTROUTING -o ens18 -s 172.16.50.0/28 -j MASQUERADE
+iptables -A FORWARD -i ens19 -o ens18 -s 172.16.40.0/28 -j ACCEPT
+iptables -A FORWARD -i ens20 -o ens18 -s 172.16.50.0/28 -j ACCEPT
+iptables-save > /etc/sysconfig/iptables
+systemctl enable iptables --now
+systemctl restart iptables
+```
+```bash
+systemctl status iptables
+iptables -t nat -L -n -v
+```
+Должны быть такие выводы у команд:
+```bash
+● iptables.service - IPv4 firewall with iptables
+     Loaded: loaded (/usr/lib/systemd/system/iptables.service; enabled; preset: disabled)
+     Active: active (exited) since Wed 2025-12-03 02:43:32 UTC; 7s ago
+    Process: 6973 ExecStart=/etc/init.d/iptables start (code=exited, status=0/SUCCESS)
+   Main PID: 6973 (code=exited, status=0/SUCCESS)
+        CPU: 17ms
+Chain PREROUTING (policy ACCEPT 1 packets, 68 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain INPUT (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain OUTPUT (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain POSTROUTING (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 MASQUERADE  0    --  *      ens18   172.16.40.0/28       0.0.0.0/0           
+    0     0 MASQUERADE  0    --  *      ens18   172.16.50.0/28       0.0.0.0/0  
+```
