@@ -685,8 +685,8 @@ gre1@NONE        UNKNOWN        10.10.0.2/30 fe80::5efe:ac10:3202/64
 - Обеспечьте защиту выбранного протокола посредством парольной защиты.
 - Сведения о настройке и защите протокола занесите в отчёт. (Отдельный файл.)
 
+### HQ-RTR
 ```bash
-# HQ-RTR
 apt-get update && apt-get install frr -y
 ```
 ```bash
@@ -726,7 +726,7 @@ exit
 end
 ```
 
-# BR-RTR
+### BR-RTR
 ```bash
 apt-get update && apt-get install frr -y
 ```
