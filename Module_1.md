@@ -198,7 +198,7 @@ mkdir /etc/net/ifaces/ens19
 vim /etc/net/ifaces/ens18/ipv4address
 172.16.50.2/28
 vim /etc/net/ifaces/ens19/ipv4address
-192.168.30.1
+192.168.30.1/28
 ```
 ⚠️ 💡 **Для ens18 (/etc/net/ifaces/ens18/options) в BR-RTR, нужно заменить**:
 ```bash
@@ -236,7 +236,7 @@ ip -c -br a
 ```bash
 lo               UNKNOWN        127.0.0.1/8 ::1/128 
 ens18            UP             172.16.50.2/28 fe80::be24:11ff:feab:8a59/64 
-ens19            UP             192.168.30.1/32 fe80::be24:11ff:fe58:e15d/64 
+ens19            UP             192.168.30.1/28 fe80::be24:11ff:fe58:e15d/64 
 ```
 
 ⚠️ 💡 **Для ens18 (/etc/net/ifaces/ens18/options) в BR-SRV, нужно заменить**:
@@ -282,12 +282,15 @@ ens18            UP             192.168.30.2/28 fe80::be24:11ff:fe3c:a3dd/64
 vim /etc/net/sysctl.conf
 net.ipv4.ip_forward = 1
 
+sysctl -p
 systemctl restart network
 ```
 ```bash
 apt-get update && apt-get install iptables -y
+
 iptables -t nat -A POSTROUTING -o ens18 -s 172.16.40.0/28 -j MASQUERADE
 iptables -t nat -A POSTROUTING -o ens18 -s 172.16.50.0/28 -j MASQUERADE
+
 iptables -A FORWARD -i ens19 -o ens18 -s 172.16.40.0/28 -j ACCEPT
 iptables -A FORWARD -i ens20 -o ens18 -s 172.16.50.0/28 -j ACCEPT
 iptables-save > /etc/sysconfig/iptables
@@ -319,4 +322,117 @@ Chain POSTROUTING (policy ACCEPT 0 packets, 0 bytes)
  pkts bytes target     prot opt in     out     source               destination         
     0     0 MASQUERADE  0    --  *      ens18   172.16.40.0/28       0.0.0.0/0           
     0     0 MASQUERADE  0    --  *      ens18   172.16.50.0/28       0.0.0.0/0  
+```
+> ⚠️ 💡 **Примечание!**: Сразу же настроим интернет на всех устройствах, для этого потребуется повтороить настройку на всех устройствах, детали приведены ниже.
+
+```bash
+# HQ-RTR
+vim /etc/net/sysctl.conf
+net.ipv4.ip_forward = 1
+
+sysctl -p
+systemctl restart network
+```
+```bash
+apt-get update && apt-get install iptables -y
+
+iptables -t nat -A POSTROUTING -o ens18 -s 192.168.10.0/27 -j MASQUERADE
+iptables -t nat -A POSTROUTING -o ens18 -s 192.168.20.64/28 -j MASQUERADE
+iptables -t nat -A POSTROUTING -o ens18 -s 192.168.99.88/29 -j MASQUERADE
+
+iptables -A FORWARD -i ens19.10 -o ens18 -s 192.168.10.0/27 -j ACCEPT
+iptables -A FORWARD -i ens19.20 -o ens18 -s 192.168.20.64/28 -j ACCEPT
+iptables -A FORWARD -i ens19.99 -o ens18 -s 192.168.99.88/29 -j ACCEPT
+
+iptables-save > /etc/sysconfig/iptables
+systemctl enable iptables --now
+systemctl restart iptables
+```
+```bash
+systemctl status iptables
+iptables -t nat -L -n -v
+```
+Должны быть такие выводы у команд:
+```bash
+● iptables.service - IPv4 firewall with iptables
+     Loaded: loaded (/lib/systemd/system/iptables.service; enabled; vendor preset: disabled)
+     Active: active (exited) since Wed 2025-12-03 06:07:07 MSK; 7s ago
+    Process: 3143 ExecStart=/etc/init.d/iptables start (code=exited, status=0/SUCCESS)
+   Main PID: 3143 (code=exited, status=0/SUCCESS)
+        CPU: 9ms
+
+Dec 03 06:07:07 hq-rtr.au-team.irpo systemd[1]: iptables.service: Deactivated successfully.
+Dec 03 06:07:07 hq-rtr.au-team.irpo systemd[1]: Stopped IPv4 firewall with iptables.
+Dec 03 06:07:07 hq-rtr.au-team.irpo systemd[1]: Starting IPv4 firewall with iptables...
+Dec 03 06:07:07 hq-rtr.au-team.irpo iptables[3157]: Applying iptables firewall rules: succeeded
+Dec 03 06:07:07 hq-rtr.au-team.irpo iptables[3143]: Applying iptables firewall rules: [ DONE ]
+Dec 03 06:07:07 hq-rtr.au-team.irpo systemd[1]: Finished IPv4 firewall with iptables.
+
+Chain PREROUTING (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain INPUT (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain OUTPUT (policy ACCEPT 1 packets, 76 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain POSTROUTING (policy ACCEPT 1 packets, 76 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 MASQUERADE  all  --  *      ens18   192.168.10.0/27      0.0.0.0/0           
+    0     0 MASQUERADE  all  --  *      ens18   192.168.20.64/28     0.0.0.0/0           
+    0     0 MASQUERADE  all  --  *      ens18   192.168.99.88/29     0.0.0.0/0 
+```
+
+```bash
+# BR-RTR
+vim /etc/net/sysctl.conf
+net.ipv4.ip_forward = 1
+
+sysctl -p
+systemctl restart network
+```
+```bash
+apt-get update && apt-get install iptables -y
+
+iptables -t nat -A POSTROUTING -o ens18 -s 192.168.30.0/28 -j MASQUERADE
+iptables -A FORWARD -i ens19 -o ens18 -s 192.168.30.0/28 -j ACCEPT
+
+iptables-save > /etc/sysconfig/iptables
+
+systemctl enable iptables --now
+systemctl restart iptables
+```
+```bash
+systemctl status iptables
+iptables -t nat -L -n -v
+```
+Должны быть такие выводы у команд:
+```bash
+● iptables.service - IPv4 firewall with iptables
+     Loaded: loaded (/lib/systemd/system/iptables.service; enabled; vendor preset: disabled)
+     Active: active (exited) since Wed 2025-12-03 06:12:50 MSK; 5s ago
+    Process: 5577 ExecStart=/etc/init.d/iptables start (code=exited, status=0/SUCCESS)
+   Main PID: 5577 (code=exited, status=0/SUCCESS)
+        CPU: 9ms
+
+Dec 03 06:12:50 br-rtr.au-team.irpo systemd[1]: iptables.service: Deactivated successfully.
+Dec 03 06:12:50 br-rtr.au-team.irpo systemd[1]: Stopped IPv4 firewall with iptables.
+Dec 03 06:12:50 br-rtr.au-team.irpo systemd[1]: Starting IPv4 firewall with iptables...
+Dec 03 06:12:50 br-rtr.au-team.irpo iptables[5591]: Applying iptables firewall rules: succeeded
+Dec 03 06:12:50 br-rtr.au-team.irpo iptables[5577]: Applying iptables firewall rules: [ DONE ]
+Dec 03 06:12:50 br-rtr.au-team.irpo systemd[1]: Finished IPv4 firewall with iptables.
+
+Chain PREROUTING (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain INPUT (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain OUTPUT (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain POSTROUTING (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 MASQUERADE  all  --  *      ens18   192.168.30.0/28      0.0.0.0/0   
 ```
