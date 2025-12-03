@@ -135,7 +135,7 @@ vim /etc/net/ifaces/ens18/ipv4route
 default via 172.16.40.1
 ```
 ```bash
-vim /etc/net/ifaces/ens18/resolvconf
+vim /etc/net/ifaces/ens18/resolv.conf
 77.88.8.8
 ```
 ```bash
@@ -176,7 +176,7 @@ vim /etc/net/ifaces/ens18/ipv4address
 192.168.10.2/27
 vim /etc/net/ifaces/ens18/ipv4route
 default via 192.168.10.1
-vim /etc/net/ifaces/ens18/resolvconf
+vim /etc/net/ifaces/ens18/resolv.conf
 77.88.8.8
 ```
 ```bash
@@ -225,7 +225,7 @@ TYPE=eth
 ```bash
 vim /etc/net/ifaces/ens18/ipv4route
 default via 172.16.50.1
-vim /etc/net/ifaces/ens18/resolvconf
+vim /etc/net/ifaces/ens18/resolv.conf
 77.88.8.8
 ```
 ```bash
@@ -261,7 +261,7 @@ vim /etc/net/ifaces/ens18/ipv4address
 192.168.30.2/28
 vim /etc/net/ifaces/ens18/ipv4route
 default via 172.16.30.1
-vim /etc/net/ifaces/ens18/resolvconf
+vim /etc/net/ifaces/ens18/resolv.conf
 77.88.8.8
 ```
 ```bash
