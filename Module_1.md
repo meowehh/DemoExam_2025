@@ -136,7 +136,7 @@ default via 172.16.40.1
 ```
 ```bash
 vim /etc/net/ifaces/ens18/resolv.conf
-77.88.8.8
+nameserver 77.88.8.8
 ```
 ```bash
 systemctl restart network
@@ -177,7 +177,7 @@ vim /etc/net/ifaces/ens18/ipv4address
 vim /etc/net/ifaces/ens18/ipv4route
 default via 192.168.10.1
 vim /etc/net/ifaces/ens18/resolv.conf
-77.88.8.8
+nameserver 77.88.8.8
 ```
 ```bash
 systemctl restart network
@@ -226,7 +226,7 @@ TYPE=eth
 vim /etc/net/ifaces/ens18/ipv4route
 default via 172.16.50.1
 vim /etc/net/ifaces/ens18/resolv.conf
-77.88.8.8
+nameserver 77.88.8.8
 ```
 ```bash
 systemctl restart network
@@ -262,7 +262,7 @@ vim /etc/net/ifaces/ens18/ipv4address
 vim /etc/net/ifaces/ens18/ipv4route
 default via 172.16.30.1
 vim /etc/net/ifaces/ens18/resolv.conf
-77.88.8.8
+nameserver 77.88.8.8
 ```
 ```bash
 systemctl restart network
