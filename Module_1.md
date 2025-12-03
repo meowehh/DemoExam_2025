@@ -251,12 +251,12 @@ NM_CONTROLLED=no
 SYSTEMD_CONTROLLED=no
 ```
 **На те параметры что указаны ниже**:
-```bash
+```shell
 vim /etc/net/ifaces/ens18/options
 BOOTPROTO=static
 TYPE=eth
 ```
-```bash
+```shell
 vim /etc/net/ifaces/ens18/ipv4address
 192.168.30.2/28
 vim /etc/net/ifaces/ens18/ipv4route
@@ -264,12 +264,12 @@ default via 172.16.30.1
 vim /etc/net/ifaces/ens18/resolvconf
 77.88.8.8
 ```
-```bash
+```shell
 systemctl restart network
 ip -c -br a
 ```
 Должен быть такой вывод у команды:
-```bash
+```shell
 lo               UNKNOWN        127.0.0.1/8 ::1/128 
 ens18            UP             192.168.30.2/28 fe80::be24:11ff:fe3c:a3dd/64 
 ```
@@ -277,7 +277,7 @@ ens18            UP             192.168.30.2/28 fe80::be24:11ff:fe3c:a3dd/64
 > ⚠️ 💡 **Примечание!**: HQ-CLI будет настроен позднее так как там будет использоваться DHCP настройка, на данном этапе теперь требуется настроить проброс портов чтобы пинг начал ходить между устройствами и появился доступ в интернет со всех машин, так же все отчеты будут приведны в отдельном файле, сейчас заполнять ничего не требуется, несмотря на задание.
 
 ## 📋 Задание 2: Настройка ISP
-```bash
+```shell
 # ISP
 vim /etc/net/sysctl.conf
 net.ipv4.ip_forward = 1
@@ -294,7 +294,7 @@ iptables-save > /etc/sysconfig/iptables
 systemctl enable iptables --now
 systemctl restart iptables
 ```
-```bash
+```shell
 systemctl status iptables
 iptables -t nat -L -n -v
 ```
