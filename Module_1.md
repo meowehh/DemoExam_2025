@@ -502,3 +502,109 @@ sudo cat /root/.bashrc
 >⚠️ 💡 Примечание: Пароль для пользователя sshuser установлен как P@ssw0rd, а для пользователя net_admin установлен как P@$$word. Оба пользователя добавлены в группу wheel и могут выполнять команды через sudo без дополнительной аутентификации.
 
 >⚠️ Важно: После редактирования файла /etc/sudoers рекомендуется выполнить проверку синтаксиса командой visudo -c. Для применения изменений перезагрузка системы не требуется. В случае ошибок в /etc/sudoers.d/99-sudopw - игнорируем, главное чтобы не было ошибок в /etc/sudoers, ответ парсинга - OK.
+
+📋 Задание 5: Настройка безопасного удаленного доступа на серверах HQ-SRV и BR-SRV
+```bash
+# BR-SRV
+apt-get update && apt-get install openssh-server -y
+```
+```bash
+vim /etc/openssh/sshd_config
+Port 3015
+MaxAuthTries 2
+Banner /etc/openssh/sshd_banner
+AllowUsers sshuser
+```
+```bash
+vim /etc/openssh/sshd_banner
+«Authorized access only»
+```
+```bash
+systemctl enable sshd --now
+systemctl restart sshd
+
+systemctl status sshd
+```
+Должен быть такой вывод у команды:
+```bash
+● sshd.service - OpenSSH server daemon
+     Loaded: loaded (/lib/systemd/system/sshd.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2025-12-03 09:12:33 MSK; 11s ago
+    Process: 16017 ExecStartPre=/usr/bin/ssh-keygen -A (code=exited, status=0/SUCCESS)
+    Process: 16018 ExecStartPre=/usr/sbin/sshd -t (code=exited, status=0/SUCCESS)
+   Main PID: 16019 (sshd)
+      Tasks: 1 (limit: 1149)
+     Memory: 744.0K
+        CPU: 4ms
+     CGroup: /system.slice/sshd.service
+             └─ 16019 /usr/sbin/sshd -D
+
+Dec 03 09:12:33 br-srv.au-team.irpo systemd[1]: Starting OpenSSH server daemon...
+Dec 03 09:12:33 br-srv.au-team.irpo systemd[1]: Started OpenSSH server daemon.
+Dec 03 09:12:33 br-srv.au-team.irpo sshd[16019]: Server listening on 0.0.0.0 port 3015.
+Dec 03 09:12:33 br-srv.au-team.irpo sshd[16019]: Server listening on :: port 3015.
+```
+```bash
+ssh sshuser@localhost -p 3015
+```
+Должен быть такой вывод у команды:
+```bash
+The authenticity of host '[localhost]:3015 ([127.0.0.1]:3015)' can't be established.
+ED25519 key fingerprint is SHA256:P0ziiti85F5uQtqHghYPfz/ycFlMD9EElLUGd1txyxQ.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added '[localhost]:3015' (ED25519) to the list of known hosts.
+«Authorized access only»
+```
+
+```bash
+# HQ-SRV
+apt-get update && apt-get install openssh-server -y
+```
+```bash
+vim /etc/openssh/sshd_config
+Port 3015
+MaxAuthTries 2
+Banner /etc/openssh/sshd_banner
+AllowUsers sshuser
+```
+```bash
+vim /etc/openssh/sshd_banner
+«Authorized access only»
+```
+```bash
+systemctl enable sshd --now
+systemctl restart sshd
+
+systemctl status sshd
+```
+Должен быть такой вывод у команды:
+```bash
+● sshd.service - OpenSSH server daemon
+     Loaded: loaded (/lib/systemd/system/sshd.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2025-12-03 09:15:28 MSK; 12s ago
+    Process: 15936 ExecStartPre=/usr/bin/ssh-keygen -A (code=exited, status=0/SUCCESS)
+    Process: 15937 ExecStartPre=/usr/sbin/sshd -t (code=exited, status=0/SUCCESS)
+   Main PID: 15938 (sshd)
+      Tasks: 1 (limit: 1149)
+     Memory: 740.0K
+        CPU: 5ms
+     CGroup: /system.slice/sshd.service
+             └─ 15938 /usr/sbin/sshd -D
+
+Dec 03 09:15:28 hq-srv.au-team.irpo systemd[1]: Starting OpenSSH server daemon...
+Dec 03 09:15:28 hq-srv.au-team.irpo systemd[1]: Started OpenSSH server daemon.
+Dec 03 09:15:28 hq-srv.au-team.irpo sshd[15938]: Server listening on 0.0.0.0 port 3015.
+Dec 03 09:15:28 hq-srv.au-team.irpo sshd[15938]: Server listening on :: port 3015.
+```
+```bash
+ssh sshuser@localhost -p 3015
+```
+Должен быть такой вывод у команды:
+```bash
+The authenticity of host '[localhost]:3015 ([127.0.0.1]:3015)' can't be established.
+ED25519 key fingerprint is SHA256:EnOVdAN2p/vLibaqlXEHECQ9ORSWeIR8Hkckk4KbU0Y.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added '[localhost]:3015' (ED25519) to the list of known hosts.
+«Authorized access only»
+```
+>⚠️ 💡 Примечание: В файле баннера, нужно поставить 1-2 отступа вниз чтобы баннер корректно отображался, в завимости от редактора vim/nano. Иначе баннер будет наезжать на поле авторизации или на строку приглашения.
