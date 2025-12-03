@@ -436,3 +436,5 @@ Chain POSTROUTING (policy ACCEPT 0 packets, 0 bytes)
  pkts bytes target     prot opt in     out     source               destination         
     0     0 MASQUERADE  all  --  *      ens18   192.168.30.0/28      0.0.0.0/0   
 ```
+
+>⚠️ **Важно**: На данном этапе уже должен работать выход в Интернет на всех устройствах, а также пинг между ними. Если что-то не работает, значит где-то ошибка.
