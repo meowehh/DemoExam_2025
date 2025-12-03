@@ -80,7 +80,6 @@ ens20            UP             172.16.50.1/28 fe80::be24:11ff:fe03:76a0/64
 
 ```bash
 # HQ-RTR
-mkdir /etc/net/ifaces/ens18
 mkdir /etc/net/ifaces/ens19
 mkdir /etc/net/ifaces/ens19.10
 mkdir /etc/net/ifaces/ens19.20
