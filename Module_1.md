@@ -31,8 +31,8 @@
 ```bash
 hostnamectl set-hostname <полное_доменное_имя>; exec bash
 ```
-```bash
 ### ISP
+```bash
 hostnamectl set-hostname isp.au-team.irpo; exec bash
 ```
 ### HQ-RTR
