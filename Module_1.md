@@ -677,3 +677,89 @@ gre1@NONE        UNKNOWN        10.10.0.2/30 fe80::5efe:ac10:3202/64
 ```
 
 > **Проверка**: Проверяем работоспобность пингуя по туннелю с 10.10.0.1 на 10.10.0.2 и обратно.
+
+## 📋 Задание 7: Обеспечьте динамическую маршрутизацию: ресурсы одного офиса должны быть доступны из другого офиса. Для обеспечения динамической маршрутизации используйте link state протокол на ваше усмотрение.
+
+- Разрешите выбранный протокол только на интерфейсах в ip туннеле.
+- Маршрутизаторы должны делиться маршрутами только друг с другом.
+- Обеспечьте защиту выбранного протокола посредством парольной защиты.
+- Сведения о настройке и защите протокола занесите в отчёт. (Отдельный файл.)
+
+```bash
+# HQ-RTR
+apt-get update && apt-get install frr -y
+```
+```bash
+vim /etc/frr/daemons
+ospfd=yes
+```
+```bash
+systemctl enable --now frr
+systemctl restart frr
+reboot
+```
+```bash
+vtysh
+show run
+```
+> Если все было настроено верно (интерфейс gre,osfpd и нигде не было ошибки) получаем такой вывод, самое главное у вас сама по себе должна появиться строка с интрефейсом, не нужно создавать его самим, нужно выполнить все в точности как у меня, если интерфейс gre1 внутри frr создается сам, отсекается большая часть проблем.
+
+Вывод:
+```bash
+Hello, this is FRRouting (version 9.0.2).
+Copyright 1996-2005 Kunihiro Ishiguro, et al.
+
+Building configuration...
+
+Current configuration:
+!
+frr version 9.0.2
+frr defaults traditional
+hostname hq-rtr.au-team.irpo
+log file /var/log/frr/frr.log
+no ipv6 forwarding
+!
+interface gre1
+ ip ospf network broadcast
+exit
+!
+end
+```
+
+# BR-RTR
+```bash
+apt-get update && apt-get install frr -y
+```
+```bash
+vim /etc/frr/daemons
+ospfd=yes
+```
+```bash
+systemctl enable --now frr
+systemctl restart frr
+reboot
+```
+```bash
+vtysh
+show run
+```
+```bash
+Hello, this is FRRouting (version 9.0.2).
+Copyright 1996-2005 Kunihiro Ishiguro, et al.
+
+Building configuration...
+
+Current configuration:
+!
+frr version 9.0.2
+frr defaults traditional
+hostname br-rtr.au-team.irpo
+log file /var/log/frr/frr.log
+no ipv6 forwarding
+!
+interface gre1
+ ip ospf network broadcast
+exit
+!
+end
+```
