@@ -95,6 +95,18 @@ vim /etc/net/ifaces/ens19.20/ipv4address
 vim /etc/net/ifaces/ens19.99/ipv4address
 192.168.99.91/29
 ```
+⚠️ 💡 **Для ens18 в HQ-RTR, нужно заменить**:
+```bash
+BOOTPROTO=dhcp
+TYPE=eth
+CONFIG_WIRELESS=no
+SYSTEMD_BOOTPROTO=dhcp4
+CONFIG_IPV4=yes
+DISABLED=no
+NM_CONTROLLED=no
+SYSTEMD_CONTROLLED=no
+```
+**На те параметры что указаны ниже**:
 ```bash
 vim /etc/net/ifaces/ens18/options
 BOOTPROTO=static
