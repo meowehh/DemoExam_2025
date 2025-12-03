@@ -188,3 +188,53 @@ ip -c -br a
 lo               UNKNOWN        127.0.0.1/8 ::1/128 
 ens18            UP             192.168.10.2/27 fe80::be24:11ff:feff:6538/64 
 ```
+```bash
+
+
+# BR-RTR
+mkdir /etc/net/ifaces/ens19
+```
+```bash
+vim /etc/net/ifaces/ens18/ipv4address
+172.16.50.2/28
+vim /etc/net/ifaces/ens19/ipv4address
+192.168.30.1
+```
+⚠️ 💡 **Для ens18 (/etc/net/ifaces/ens18/options) в BR-RTR, нужно заменить**:
+```bash
+BOOTPROTO=dhcp
+TYPE=eth
+CONFIG_WIRELESS=no
+SYSTEMD_BOOTPROTO=dhcp4
+CONFIG_IPV4=yes
+DISABLED=no
+NM_CONTROLLED=no
+SYSTEMD_CONTROLLED=no
+```
+**На те параметры что указаны ниже**:
+```bash
+vim /etc/net/ifaces/ens18/options
+BOOTPROTO=static
+TYPE=eth
+```
+```bash
+vim /etc/net/ifaces/ens19/options
+BOOTPROTO=static
+TYPE=eth
+```
+```bash
+vim /etc/net/ifaces/ens18/ipv4route
+default via 172.16.50.1/28
+vim /etc/net/ifaces/ens18/resolvconf
+77.88.8.8
+```
+```bash
+systemctl restart network
+ip -c -br a
+```
+Должен быть такой вывод у команды:
+```bash
+lo               UNKNOWN        127.0.0.1/8 ::1/128 
+ens18            UP             172.16.50.2/28 fe80::be24:11ff:feab:8a59/64 
+ens19            UP             192.168.30.1/32 fe80::be24:11ff:fe58:e15d/64 
+```
