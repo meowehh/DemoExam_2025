@@ -111,6 +111,8 @@ SYSTEMD_CONTROLLED=no
 vim /etc/net/ifaces/ens18/options
 BOOTPROTO=static
 TYPE=eth
+```
+```bash
 vim /etc/net/ifaces/ens19/options
 BOOTPROTO=none
 TYPE=eth
