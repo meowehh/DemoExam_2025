@@ -293,6 +293,7 @@ iptables -t nat -A POSTROUTING -o ens18 -s 172.16.50.0/28 -j MASQUERADE
 
 iptables -A FORWARD -i ens19 -o ens18 -s 172.16.40.0/28 -j ACCEPT
 iptables -A FORWARD -i ens20 -o ens18 -s 172.16.50.0/28 -j ACCEPT
+
 iptables-save > /etc/sysconfig/iptables
 systemctl enable iptables --now
 systemctl restart iptables
@@ -437,4 +438,4 @@ Chain POSTROUTING (policy ACCEPT 0 packets, 0 bytes)
     0     0 MASQUERADE  all  --  *      ens18   192.168.30.0/28      0.0.0.0/0   
 ```
 
->⚠️ **Важно**: На данном этапе уже должен работать выход в Интернет на всех устройствах, а также пинг между ними. Если что-то не работает, значит где-то ошибка.
+>⚠️ **Важно**: На данном этапе уже должен работать выход в Интернет на всех устройствах (кроме HQ-CLI, его настроим позже по DHCP), а также пинг между ними. Если что-то не работает, значит где-то ошибка.
