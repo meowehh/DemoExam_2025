@@ -632,6 +632,9 @@ TUNREMOTE=172.16.50.2
 TUNOPTIONS='ttl 64'
 vim /etc/net/ifaces/gre1/ipv4address
 10.10.0.1/30
+
+systemctl restart network
+ip -c -br a
 ```
 Если все сделано верно получаем следующий вывод:
 ```bash
@@ -660,6 +663,7 @@ vim /etc/net/ifaces/gre1/ipv4address
 10.10.0.2/30
 
 systemctl restart network
+ip -c -br a
 ```
 Если все сделано верно получаем следующий вывод:
 ```bash
