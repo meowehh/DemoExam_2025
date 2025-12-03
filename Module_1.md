@@ -179,3 +179,12 @@ default via 192.168.10.1
 vim /etc/net/ifaces/ens18/resolvconf
 77.88.8.8
 ```
+```bash
+systemctl restart network
+ip -c -br a
+```
+Должен быть такой вывод у команды:
+```bash
+lo               UNKNOWN        127.0.0.1/8 ::1/128 
+ens18            UP             192.168.10.2/27 fe80::be24:11ff:feff:6538/64 
+```
