@@ -443,8 +443,8 @@ Chain POSTROUTING (policy ACCEPT 0 packets, 0 bytes)
 
 ## 📋 Задание 3: Создание локальных учетных записей
 
-# HQ-SRV и BR-SRV
 ```bash
+# HQ-SRV и BR-SRV
 useradd sshuser -u 1015 -U
 passwd sshuser
 usermod -a -G wheel sshuser
@@ -457,8 +457,8 @@ sshuser ALL=(ALL) NOPASSWD: ALL
 sudo cat /root/.bashrc
 ```
 
-# HQ-RTR и BR-RTR
 ```bash
+# HQ-RTR и BR-RTR
 useradd net_admin
 passwd net_admin
 usermod -a -G wheel net_admin
