@@ -95,7 +95,7 @@ vim /etc/net/ifaces/ens19.20/ipv4address
 vim /etc/net/ifaces/ens19.99/ipv4address
 192.168.99.91/29
 ```
-⚠️ 💡 **Для ens18 (vim /etc/net/ifaces/ens18/options) в HQ-RTR, нужно заменить**:
+⚠️ 💡 **Для ens18 (/etc/net/ifaces/ens18/options) в HQ-RTR, нужно заменить**:
 ```bash
 BOOTPROTO=dhcp
 TYPE=eth
