@@ -30,18 +30,29 @@
 ### 1.1 Настройка hostname
 ```bash
 hostnamectl set-hostname <полное_доменное_имя>; exec bash
-
-# ISP
+```
+```bash
+### ISP
 hostnamectl set-hostname isp.au-team.irpo; exec bash
-# HQ-RTR
+```
+### HQ-RTR
+```bash
 hostnamectl set-hostname hq-rtr.au-team.irpo; exec bash
-# HQ-SRV
+```
+### HQ-SRV
+```bash
 hostnamectl set-hostname hq-srv.au-team.irpo; exec bash
-# HQ-CLI
+```
+### HQ-CLI
+```bash
 hostnamectl set-hostname hq-cli.au-team.irpo; exec bash
-# BR-RTR
+```
+### BR-RTR
+```bash
 hostnamectl set-hostname br-rtr.au-team.irpo; exec bash
-# BR-SRV
+```
+### BR-SRV
+```bash
 hostnamectl set-hostname br-srv.au-team.irpo; exec bash
 ```
 
