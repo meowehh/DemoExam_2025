@@ -260,7 +260,7 @@ TYPE=eth
 vim /etc/net/ifaces/ens18/ipv4address
 192.168.30.2/28
 vim /etc/net/ifaces/ens18/ipv4route
-default via 172.16.30.1
+default via 192.168.30.1
 vim /etc/net/ifaces/ens18/resolv.conf
 nameserver 77.88.8.8
 ```
