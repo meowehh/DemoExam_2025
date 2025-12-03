@@ -51,8 +51,8 @@ hostnamectl set-hostname br-srv.au-team.irpo; exec bash
 
 ### 1.2 Конфигурация IPv4 адресов.
 
+### ISP
 ```bash
-# ISP
 mkdir /etc/net/ifaces/ens19
 mkdir /etc/net/ifaces/ens20
 ```
@@ -84,9 +84,8 @@ ens20            UP             172.16.50.1/28 fe80::be24:11ff:fe03:76a0/64
 
 > ⚠️ 💡 **Примечание**: Для ens18 вывод может отличаться из-за того что у всех этот интерфейс зависит от их собственной локальной сети, так как это интерфейс через который идет выход в интернет с помощью Bridge из Proxmox в VMware, в VMware обязательно нужно было указать Bridge в типе сетевого подключения, тип NAT или создание отдельной Network внутри VMware может вызывать нестабильность в работе!
 
-
+### HQ-RTR
 ```bash
-# HQ-RTR
 mkdir /etc/net/ifaces/ens19
 mkdir /etc/net/ifaces/ens19.10
 mkdir /etc/net/ifaces/ens19.20
@@ -161,6 +160,7 @@ ens19.99@ens19   UP             192.168.99.91/29 fe80::be24:11ff:fea9:5f29/64
 > ⚠️ 💡 **Важно!**: Так как VLAN созданы через network внутри Proxmox, обязательно идем в веб панель Proxmox VE, заходим в раздел Server View > Datacenter > pve. В этом разделе в открытом списке выбираем 10103,10104 машины (HQ-SRV,HQ-CLI), заходим в настройки во вкладку Hardware, меняем в графе Network Device (net0) VLAN tag, с того который там указан на 10 для HQ-CLI, и на 20 для HQ-SRV. Перезапускать машины не нужно.
 
 
+### HQ-SRV
 ⚠️ 💡 **Для ens18 (/etc/net/ifaces/ens18/options) в HQ-SRV, нужно заменить**:
 ```bash
 BOOTPROTO=dhcp
@@ -195,10 +195,8 @@ ip -c -br a
 lo               UNKNOWN        127.0.0.1/8 ::1/128 
 ens18            UP             192.168.10.2/27 fe80::be24:11ff:feff:6538/64 
 ```
+### BR-RTR
 ```bash
-
-
-# BR-RTR
 mkdir /etc/net/ifaces/ens19
 ```
 ```bash
@@ -246,6 +244,7 @@ ens18            UP             172.16.50.2/28 fe80::be24:11ff:feab:8a59/64
 ens19            UP             192.168.30.1/28 fe80::be24:11ff:fe58:e15d/64 
 ```
 
+### BR-SRV
 ⚠️ 💡 **Для ens18 (/etc/net/ifaces/ens18/options) в BR-SRV, нужно заменить**:
 ```bash
 BOOTPROTO=dhcp
@@ -292,8 +291,8 @@ ens18            UP             192.168.30.2/28 fe80::be24:11ff:fe3c:a3dd/64
 - Интерфейс, к которому подключен BR-RTR, подключен к сети 172.16.50.0/28
 - На ISP настройте динамическую сетевую трансляцию в сторону HQ-RTR и BR-RTR для доступа к сети Интернет
 
+### ISP
 ```bash
-# ISP
 vim /etc/net/sysctl.conf
 net.ipv4.ip_forward = 1
 
@@ -341,8 +340,8 @@ Chain POSTROUTING (policy ACCEPT 0 packets, 0 bytes)
 ```
 > ⚠️ 💡 **Примечание!**: Сразу же настроим интернет на всех устройствах, для этого потребуется повтороить настройку на всех устройствах, детали приведены ниже.
 
+### HQ-RTR
 ```bash
-# HQ-RTR
 vim /etc/net/sysctl.conf
 net.ipv4.ip_forward = 1
 
@@ -399,9 +398,8 @@ Chain POSTROUTING (policy ACCEPT 1 packets, 76 bytes)
     0     0 MASQUERADE  all  --  *      ens18   192.168.20.64/28     0.0.0.0/0           
     0     0 MASQUERADE  all  --  *      ens18   192.168.99.88/29     0.0.0.0/0 
 ```
-
+### BR-RTR
 ```bash
-# BR-RTR
 vim /etc/net/sysctl.conf
 net.ipv4.ip_forward = 1
 
@@ -467,8 +465,8 @@ Chain POSTROUTING (policy ACCEPT 0 packets, 0 bytes)
 - При настройке на EcoRouter пользователь net_admin должен обладать максимальными привилегиями (⚠️ Не выполняется, так как в нашем случае вместо EcoRouter испольузется ALT Server с эмуляцией роутера через FRR позднее.)
 - При настройке ОС на базе Linux, запускать sudo без дополнительной аутентификации
 
+### HQ-SRV и BR-SRV
 ```bash
-# HQ-SRV и BR-SRV
 useradd sshuser -u 1015 -U
 passwd sshuser
 usermod -a -G wheel sshuser
@@ -483,8 +481,8 @@ sshuser ALL=(ALL) NOPASSWD: ALL
 sudo cat /root/.bashrc
 ```
 
+### HQ-RTR и BR-RTR
 ```bash
-# HQ-RTR и BR-RTR
 useradd net_admin
 passwd net_admin
 usermod -a -G wheel net_admin
@@ -510,8 +508,8 @@ sudo cat /root/.bashrc
 - Ограничьте количество попыток входа до двух.
 - Настройте баннер «Authorized access only».
 
+### BR-SRV
 ```bash
-# BR-SRV
 apt-get update && apt-get install openssh-server -y
 ```
 ```bash
@@ -562,8 +560,8 @@ Warning: Permanently added '[localhost]:3015' (ED25519) to the list of known hos
 «Authorized access only»
 ```
 
+### HQ-SRV
 ```bash
-# HQ-SRV
 apt-get update && apt-get install openssh-server -y
 ```
 ```bash
@@ -621,8 +619,8 @@ Warning: Permanently added '[localhost]:3015' (ED25519) to the list of known hos
 - Сведения о туннеле занесите в отчёт. (Отчет будет приложен отдельным файлом.)
 - На выбор технологии GRE или IP in IP.
 
+### HQ-RTR
 ```bash
-# HQ-RTR
 mkdir /etc/net/ifaces/gre1
 vim /etc/net/ifaces/gre1/options
 TYPE=iptun
@@ -650,8 +648,8 @@ erspan0@NONE     DOWN
 gre1@NONE        UNKNOWN        10.10.0.1/30 fe80::5efe:ac10:2802/64
 ```
 
+### BR-RTR
 ```bash
-# BR-RTR
 mkdir /etc/net/ifaces/gre1
 vim /etc/net/ifaces/gre1/options
 TYPE=iptun
