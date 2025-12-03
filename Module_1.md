@@ -68,7 +68,7 @@ systemctl restart network
 ip -c -br a
 ```
 Должен быть такой вывод у команды:
-```bash
+```shell
 lo               UNKNOWN        127.0.0.1/8 ::1/128 
 ens18            UP             192.168.120.155/24 fe80::be24:11ff:fe1b:fd7a/64 
 ens19            UP             172.16.40.1/28 fe80::be24:11ff:fe46:6db7/64 
