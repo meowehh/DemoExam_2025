@@ -1102,4 +1102,36 @@ Dec 04 07:49:41 hq-srv.au-team.irpo named[3088]: running
 Dec 04 07:49:42 hq-srv.au-team.irpo named[3088]: managed-keys-zone: Key 20326 for zone . is now trusted (acceptance timer complete)
 Dec 04 07:49:42 hq-srv.au-team.irpo named[3088]: managed-keys-zone: Key 38696 for zone . is now trusted (acceptance timer complete)
 ```
->⚠️ **Важно**: Проверяем с помощью пинга соседей по их доменным именам, пробуем пинговать br-srv.au-team.irpo, hq-cli.au-team.irpo, moodle.au-team.irpo, wiki.au-team.irpo и так далее. Проверяем выход в Интернет. Далее небходимо настроить этот локальным DNS сервер для всех машин, так как на hq-cli настроен DHCP где уже прописан этот сервер, то это будет нужно сделать только на HQ-RTR,BR-RTR,BR-SRV. 
+>⚠️ **Важно**: Проверяем с помощью пинга соседей по их доменным именам, пробуем пинговать br-srv.au-team.irpo, hq-cli.au-team.irpo, moodle.au-team.irpo, wiki.au-team.irpo и так далее. Проверяем выход в Интернет. Далее небходимо настроить этот локальный DNS сервер для всех машин, так как на hq-cli настроен DHCP где уже прописан этот сервер, то это будет нужно сделать только на HQ-RTR,BR-RTR,BR-SRV.
+
+### HQ-RTR
+```bash
+vim /etc/net/ifaces/ens18/resolv.conf
+nameserver 192.168.10.2 # Старую запись удаляем, оставляем только новую.
+```
+```bash
+systemctl restart network
+```
+> Проверямем пинг до Интернета, локальных доменных имен, все должно работать.
+
+### BR-RTR
+```bash
+vim /etc/net/ifaces/ens18/resolv.conf
+nameserver 192.168.10.2 # Старую запись удаляем, оставляем только новую.
+```
+```bash
+systemctl restart network
+```
+> Проверямем пинг до Интернета, локальных доменных имен, все должно работать.
+
+### BR-SRV
+```bash
+vim /etc/net/ifaces/ens18/resolv.conf
+nameserver 192.168.10.2 # Старую запись удаляем, оставляем только новую.
+```
+```bash
+systemctl restart network
+```
+> Проверямем пинг до Интернета, локальных доменных имен, все должно работать.
+
+**Дополнительная информация**: После этих манипуляций, - Модуль 1: полностью выполнен, необходимо заполнить отчет как указано [здесь.](./report_2025.docx)
