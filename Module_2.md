@@ -33,7 +33,8 @@ systemctl restart network
 vim /etc/resolvconf.conf
 name_servers=127.0.0.1
 name_servers=192.168.10.2
-resolconf -u
+resolvconf -u
+systemctl restart network
 ```
 ```bash
 samba-tool domain provision --realm=au-team.irpo --domain=au-team --adminpass='P@ssw0rd' --dns-backend=BIND9_DLZ --server-role=dc --use-rfc2307 
