@@ -56,11 +56,44 @@ password: resu
 login: root
 password: toor
 ```
-- Interface > Expert mode
-- Меняем 8080 на 8081 сохраняем и перезапускаем http server
+- Configuration > Expert mode > Apply
+- Web Interface
+- Меняем порт 8080 на 8081 > Apply > Restart http server
 - Переходим по адресу 192.168.3.10:8081
 - Вкладка Domain
 - Выбираем Active Directory Domain Controller
 - DNS FORWARDS - 192.168.1.10
-- Domain - au-team
+- Domain - au-team.irpo
+- Password - P@ssw0rd
+- Apply
 - Запускаем и дожидаемся состояния - OK.
+
+### BR-SRV:
+**Перепускаем систему и проверяем**:
+```bash
+ping ya.ru
+ping br-srv.au-team.irpo
+ping hq-rtr.au-team.irpo
+```
+> Если все работает - то ОК!
+
+HQ-CLI:
+**Перепроверяем 192.168.3.10:8081, заходим в Domain, если сервер показывает статус OK, то идем дальше.**
+**От рута выполняем:**
+```bash
+nmcli con add type ethernet ifname ens18 con-name "Wired Connection" \
+	ipv4.method auto \
+	ipv4.ignore-auto-dns yes \
+	ipv4.dns 192.168.3.10
+nmcli con down "System ens18"
+nmcli con up "Wired Connection"
+```
+**В графической оболочке перезапустить в адаптере Networking, убрать и обратно поставить галочку.**
+**Далее в консоли**:
+```bash
+acc
+```
+- Пароль toor
+- Выбрать Auth в Networking
+- Прописать au-team.irpo au-team выбрать принять.
+> Если вход в домен произошел, то - ОК!
