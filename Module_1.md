@@ -992,16 +992,114 @@ zone "64.20.168.192.in-addr.arpa" {
     type master;
     file "/etc/bind/db.192.168.20.64";
 };
-
-// Зона обратного просмотра для сети 192.168.30.0
-zone "30.168.192.in-addr.arpa" {
-    type master;
-    file "/etc/bind/db.192.168.30";
-};
 ```
 ```bash
 nano /etc/bind/db.au-team.irpo
-nano /etc/bind/db.192.168.10
-nano /etc/bind/db.192.168.20.64
-nano /etc/bind/db.192.168.30
+$TTL 86400
+@   IN  SOA hq-srv.au-team.irpo. root.au-team.irpo. (
+        2025031901 ; serial
+        3600       ; refresh
+        1800       ; retry
+        604800     ; expire
+        86400 )    ; minimum
+
+    IN  NS  hq-srv.au-team.irpo.
+
+hq-rtr   IN  A   192.168.10.1
+br-rtr   IN  A   192.168.30.1
+hq-srv   IN  A   192.168.10.2
+hq-cli   IN  A   192.168.20.66
+br-srv   IN  A   192.168.30.2
+
+moodle   IN   A   172.16.40.1
+wiki     IN   A   172.16.50.1
+
+# Обязательно 2 пробела через Enter вниз при редактировании через nano, и 1 пробел вниз через Enter при редактирование через vim, иначе не будет работать.
 ```
+```bash
+nano /etc/bind/db.192.168.10
+$TTL 86400
+@   IN  SOA hq-srv.au-team.irpo. root.au-team.irpo. (
+        2025120401
+        3600
+        1800
+        604800
+        86400 )
+
+    IN  NS  hq-srv.au-team.irpo.
+
+1   IN  PTR  hq-rtr.au-team.irpo.
+2   IN  PTR  hq-srv.au-team.irpo.
+
+# Обязательно 2 пробела через Enter вниз при редактировании через nano, и 1 пробел вниз через Enter при редактирование через vim, иначе не будет работать.
+```
+```bash
+nano /etc/bind/db.192.168.20.64
+$TTL 86400
+@   IN  SOA hq-srv.au-team.irpo. root.au-team.irpo. (
+        2025120401
+        3600
+        1800
+        604800
+        86400 )
+
+    IN  NS  hq-srv.au-team.irpo.
+
+1  IN  PTR  hq-cli.au-team.irpo.
+
+# Обязательно 2 пробела через Enter вниз при редактировании через nano, и 1 пробел вниз через Enter при редактирование через vim, иначе не будет работать.
+```
+
+```bash
+rm -rf /etc/net/ifaces/ens18/resolv.conf 
+systemctl restart network
+```
+```bash
+nano /etc/resolvconf.conf
+name_servers=127.0.0.1
+```
+```bash
+resolvconf -u
+systemctl restart network
+```
+**Выполним проверку**:
+```bash
+cat /etc/resolv.conf | grep nameserver
+```
+**Если все настроено верно получаем такой ответ**:
+```bash
+nameserver 127.0.0.1
+```
+**Запускаем службу DNS**: 
+```bash
+systemctl enable --now bind
+systemctl restart bind
+```
+```bash
+systemctl status bind
+```
+```bash
+● bind.service - Berkeley Internet Name Domain (DNS)
+     Loaded: loaded (/lib/systemd/system/bind.service; enabled; vendor preset: disabled)
+     Active: active (running) since Thu 2025-12-04 07:49:41 +07; 2s ago
+    Process: 3082 ExecStartPre=/etc/init.d/bind rndc_keygen (code=exited, status=0/SUCCESS)
+    Process: 3086 ExecStartPre=/usr/sbin/named-checkconf $CHROOT -z /etc/named.conf (code=exited, status=0/SUCCESS)
+    Process: 3087 ExecStart=/usr/sbin/named -u named $CHROOT $RETAIN_CAPS $EXTRAOPTIONS (code=exited, status=0/SUCCESS)
+      Tasks: 5 (limit: 1149)
+     Memory: 10.2M
+        CPU: 15ms
+     CGroup: /system.slice/bind.service
+             └─ 3088 /usr/sbin/named -u named
+
+Dec 04 07:49:41 hq-srv.au-team.irpo named[3088]: zone 10.168.192.in-addr.arpa/IN: loaded serial 2025120401
+Dec 04 07:49:41 hq-srv.au-team.irpo named[3088]: zone 64.20.168.192.in-addr.arpa/IN: loaded serial 2025120401
+Dec 04 07:49:41 hq-srv.au-team.irpo named[3088]: zone au-team.irpo/IN: loaded serial 2025031901
+Dec 04 07:49:41 hq-srv.au-team.irpo named[3088]: zone localdomain/IN: loaded serial 2025110500
+Dec 04 07:49:41 hq-srv.au-team.irpo named[3088]: zone localhost/IN: loaded serial 2025110500
+Dec 04 07:49:41 hq-srv.au-team.irpo named[3088]: all zones loaded
+Dec 04 07:49:41 hq-srv.au-team.irpo systemd[1]: Started Berkeley Internet Name Domain (DNS).
+Dec 04 07:49:41 hq-srv.au-team.irpo named[3088]: running
+Dec 04 07:49:42 hq-srv.au-team.irpo named[3088]: managed-keys-zone: Key 20326 for zone . is now trusted (acceptance timer complete)
+Dec 04 07:49:42 hq-srv.au-team.irpo named[3088]: managed-keys-zone: Key 38696 for zone . is now trusted (acceptance timer complete)
+```
+>⚠️ **Важно**: Проверяем с помощью пинга соседей по их доменным именам, пробуем пинговать br-srv.au-team.irpo, hq-cli.au-team.irpo, moodle.au-team.irpo, wiki.au-team.irpo и так далее. Проверяем выход в Интернет. Далее небходимо настроить этот локальным DNS сервер для всех машин, так как на hq-cli настроен DHCP где уже прописан этот сервер, то это будет нужно сделать только на HQ-RTR,BR-RTR,BR-SRV. 
