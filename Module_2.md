@@ -32,10 +32,30 @@ rm -rf /etc/net/ifaces/ens18/resolv.conf
 systemctl restart network
 vim /etc/resolvconf.conf
 name_servers=127.0.0.1
-name_servers=192.168.10.2
+name_servers=192.168.1.10
 resolvconf -u
 systemctl restart network
 ```
 ```bash
 samba-tool domain provision --realm=au-team.irpo --domain=au-team --adminpass='P@ssw0rd' --dns-backend=BIND9_DLZ --server-role=dc --use-rfc2307 
 ```
+
+### HQ-CLI
+```bash
+apt-get update && apt-get install -y admx-* admc gpui sudo gpupdate
+```
+**Заходим через вкладку Console внутри Proxmox VE, чтобы получить доступ к графической части.**
+```
+login: user
+password: resu
+```
+**Открываем Firefox:** 
+- Переходим по адресу 192.168.3.10:8080
+- Interface > Expert mode
+- Меняем 8080 на 8081 сохраняем и перезапускаем http server
+- Переходим по адресу 192.168.3.10:8081
+- Вкладка Domain
+- Выбираем Active Directory Domain Controller
+- DNS FORWARDS - 192.168.1.10
+- Domain - au-team
+- Запускаем и дожидаемся состояния - OK.
