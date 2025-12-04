@@ -992,6 +992,8 @@ zone "64.20.168.192.in-addr.arpa" {
     type master;
     file "/etc/bind/db.192.168.20.64";
 };
+
+# Обязательно 2 пробела через Enter вниз при редактировании через nano, и 1 пробел вниз через Enter при редактирование через vim, иначе не будет работать.
 ```
 ```bash
 nano /etc/bind/db.au-team.irpo
