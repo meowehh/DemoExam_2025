@@ -997,7 +997,7 @@ zone "64.20.168.192.in-addr.arpa" {
 nano /etc/bind/db.au-team.irpo
 $TTL 86400
 @   IN  SOA hq-srv.au-team.irpo. root.au-team.irpo. (
-        2025031901 ; serial
+        2025120401 ; serial
         3600       ; refresh
         1800       ; retry
         604800     ; expire
@@ -1093,7 +1093,7 @@ systemctl status bind
 
 Dec 04 07:49:41 hq-srv.au-team.irpo named[3088]: zone 10.168.192.in-addr.arpa/IN: loaded serial 2025120401
 Dec 04 07:49:41 hq-srv.au-team.irpo named[3088]: zone 64.20.168.192.in-addr.arpa/IN: loaded serial 2025120401
-Dec 04 07:49:41 hq-srv.au-team.irpo named[3088]: zone au-team.irpo/IN: loaded serial 2025031901
+Dec 04 07:49:41 hq-srv.au-team.irpo named[3088]: zone au-team.irpo/IN: loaded serial 2025120401
 Dec 04 07:49:41 hq-srv.au-team.irpo named[3088]: zone localdomain/IN: loaded serial 2025110500
 Dec 04 07:49:41 hq-srv.au-team.irpo named[3088]: zone localhost/IN: loaded serial 2025110500
 Dec 04 07:49:41 hq-srv.au-team.irpo named[3088]: all zones loaded
