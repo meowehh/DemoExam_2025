@@ -80,7 +80,7 @@ ping hq-rtr.au-team.irpo
 ### HQ-CLI:
 **Перепроверяем 192.168.3.10:8081**
 - Заходим в Domain
-> Если сервер показывает статус OK, то идем дальше.**
+> Если сервер показывает статус OK, то идем дальше.
 **От рута выполняем:**
 ```bash
 nmcli con add type ethernet ifname ens18 con-name "Wired Connection" \
