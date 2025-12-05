@@ -88,6 +88,8 @@ nmcli con modify CLI-NET \
 	ipv4.method auto \
 	ipv4.ignore-auto-dns yes \
 	ipv4.dns 192.168.3.10
+```
+```bash
 nmcli con down CLI-NET
 nmcli con up CLI-NET
 ```
