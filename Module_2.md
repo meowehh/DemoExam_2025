@@ -84,19 +84,20 @@ ping hq-rtr.au-team.irpo
 
 **От рута выполняем:**
 ```bash
-nmcli con add type ethernet ifname ens18 con-name "Wired Connection" \
+nmcli con modify CLI-NET \
 	ipv4.method auto \
 	ipv4.ignore-auto-dns yes \
 	ipv4.dns 192.168.3.10
-nmcli con down "System ens18"
-nmcli con up "Wired Connection"
+nmcli con down CLI-NET
+nmcli con up CLI-NET
 ```
-**В графической оболочке перезапустить в адаптере Networking, убрать и обратно поставить галочку.**
 **Далее в консоли**:
 ```bash
 acc
 ```
 - Пароль toor
 - Выбрать Auth в Networking
-- Прописать au-team.irpo au-team выбрать принять.
+- Прописать в Domain au-team.irpo
+- Прописать в Workgroup au-team \
+- Apply
 > Если вход в домен произошел, то - ОК!
