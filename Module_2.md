@@ -360,5 +360,9 @@ chronyc clients
 - Рабочий каталог ansible должен располагаться в /etc/ansible
 - Все указанные машины должны без предупреждений и ошибок отвечать pong на команду ping в ansible посланную с BR-SRV
 
+### BR-SRV
 ```bash
+apt-get update && apt-get install openssh-server ansible sshpass -y
 ```
+
+# В работе...
