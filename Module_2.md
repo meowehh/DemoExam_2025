@@ -100,7 +100,7 @@ acc
 - Пароль toor
 - Выбрать Auth в Networking
 - Прописать в Domain - au-team.irpo
-- Прописать в Workgroup - au-team \
+- Прописать в Workgroup - au-team
 - Apply
 > Если вход в домен произошел, то - ОК!
 
