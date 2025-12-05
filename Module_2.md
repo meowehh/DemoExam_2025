@@ -315,7 +315,7 @@ apt-get update && apt-get install yandex-browser -y
 ### HQ-RTR
 
 ```bash
-apt-get install -y chrony
+apt-get update && apt-get install -y chrony
 ```
 ```bash
 vim /etc/chrony.conf
