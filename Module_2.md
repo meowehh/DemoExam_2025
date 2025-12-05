@@ -211,6 +211,7 @@ sudo cat /root/.bashrc | grep root
 
 ### BR-SRV
 ```bash
+apt-get update && apt-get install git -y
 git clone https://github.com/meowehh/samba-import
 cd samba-import/
 
