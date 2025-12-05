@@ -138,14 +138,14 @@ roleadd hq wheel
 rolelst
 ```
 > **Проверяем наличие hq:wheel**
-**Добавляем в sudoers файл данные строки:**
+**Добавляем в sudoers данные строки:**
 ```bash
 mcedit /etc/sudoers
 , %AU-TEAM\\hq
 Cmnd_Alias	SHELLCMD = /usr/bin/id, /bin/cat, /bin/grep
 SHELLCMD
 ```
-Для понимая где находятся эти строки куда их нужно добавить, пример того как это реализовано у меня:
+Для понимания где находятся эти строки куда их нужно добавить, пример того как это реализовано у меня:
 ```bash
 ## User alias specification
 ##
