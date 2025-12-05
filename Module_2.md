@@ -133,7 +133,12 @@ admx-msi-setup
 ```
 ```bash
 roleadd hq wheel
+```
+**Проверяем наличие hq:wheel**:
+```bash
 rolelst
+```
+```bash
 mcedit /etc/sudoers
 , %AU-TEAM\\hq
 Cmnd_Alias	SHELLCMD = /usr/bin/id, /bin/cat, /bin/grep
