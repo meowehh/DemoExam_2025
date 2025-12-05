@@ -364,5 +364,3 @@ chronyc clients
 ```bash
 apt-get update && apt-get install openssh-server ansible sshpass -y
 ```
-
-# В работе...
