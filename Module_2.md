@@ -138,9 +138,73 @@ roleadd hq wheel
 rolelst
 ```
 > **Проверяем наличие hq:wheel**
+**Добавляем в sudoers файл данные строки:**
 ```bash
 mcedit /etc/sudoers
 , %AU-TEAM\\hq
 Cmnd_Alias	SHELLCMD = /usr/bin/id, /bin/cat, /bin/grep
 SHELLCMD
 ```
+Для понимая где находятся эти строки куда их нужно добавить, пример того как это реализовано у меня:
+```bash
+## User alias specification
+##
+## Groups of users.  These may consist of user names, uids, Unix groups,
+## or netgroups.
+# User_Alias ADMINS = millert, dowdy, mikef
+User_Alias WHEEL_USERS = %wheel, AU-TEAM\\hq # Первая строка
+User_Alias XGRP_USERS = %xgrp
+# User_Alias SUDO_USERS = %sudo
+
+##
+## Runas alias specification
+##
+Cmnd_Alias SHELLCMD = /usr/bin/id, /bin/cat, /bin/grep # Вторая строка
+##
+## User privilege specification
+##
+# root ALL=(ALL:ALL) ALL
+
+## Uncomment to allow members of group wheel to execute any command
+WHEEL_USERS ALL=(ALL:ALL) SHELLCMD # Третья строка
+```
+```
+exit
+```
+**После того как вышли из под рута, выполняем kinit:**
+```bash
+kinit
+P@ssw0rd
+```
+```bash
+admc
+```
+**Настроим групповую политку:**
+- Group Policy Objects
+- au-team.irpo > правой кнопкой мыши
+- Create a GPO and link to ths GPU
+- Название: sudoers
+- Ставим галочку в поле enforced
+- Правой кнопкой мыши по sudoers > edit
+- Machine
+- Administative Templates
+- Samba
+- Unix Settings
+- Sudo rights
+- Enabled
+- /usr/bin/id
+- /bin/cat
+- /bin/grep
+- Применяем и выходим из admc.
+```bash
+gpupdate -f # Прописываем 2 раза подряд чтобы команда точно применилась, иногда не срабатывает с 1 раза.
+```
+**Заходим из под user5.hq:**
+- Пароль - P@ssw0rd
+
+```bash
+sudo id
+sudo cat /root/.bashrc
+sudo cat /root/.bashrc | grep root
+```
+> Если все команды выполняются, значит все выполнено верно.
