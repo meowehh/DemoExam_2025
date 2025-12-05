@@ -208,3 +208,23 @@ sudo cat /root/.bashrc
 sudo cat /root/.bashrc | grep root
 ```
 > Если все команды выполняются, значит все выполнено верно.
+
+### BR-SRV
+```bash
+git clone https://github.com/meowehh/samba-import
+cd samba-import/
+
+cat before_script
+sed -i -e 's/\r$//' import.sh
+
+chmod +x import.sh 
+./import.sh /opt/users.csv
+```
+> Ждем завершения выполнения скрпта, после этого заходим на HQ-CLI и пытаемся войти в одну из учеток, флаги учетных записей проверять не нужно.
+
+### HQ-CLI
+```
+login: wesley.cain 
+password: P@ssw0rd1
+```
+> За пример взята эта учетка из /opt/users.csv, можно взять любую другую, если войти получилось, значит все выполенено верно.
