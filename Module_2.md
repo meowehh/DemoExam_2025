@@ -103,3 +103,39 @@ acc
 - Прописать в Workgroup - au-team \
 - Apply
 > Если вход в домен произошел, то - ОК!
+
+### BR-SRV
+```bash
+samba-tool group add hq
+for i in $(seq 1 5); do samba-tool user add user$i.hq 'P@ssw0rd'; done
+for i in $(seq 1 5); do samba-tool group addmembers hq user$i.hq; done
+```
+Проверим наличие группы hq в Samba, и созданных пользователей:
+```bash
+samba-tool group list
+samba-tool group listmembers hq
+```
+```bash
+admx-msi-setup
+```
+### HQ-CLI
+
+**Перезапускаем и входим как Administrator**:
+- Пароль: P@ssw0rd
+
+**Открываем терминал**:
+```bash
+su -
+toor
+```
+```bash
+admx-msi-setup
+```
+```bash
+roleadd hq wheel
+rolelst
+mcedit /etc/sudoers
+, %AU-TEAM\\hq
+Cmnd_Alias	SHELLCMD = /usr/bin/id, /bin/cat, /bin/grep
+SHELLCMD
+```
