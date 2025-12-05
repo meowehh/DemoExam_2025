@@ -134,10 +134,10 @@ admx-msi-setup
 ```bash
 roleadd hq wheel
 ```
-**Проверяем наличие hq:wheel**:
 ```bash
 rolelst
 ```
+> **Проверяем наличие hq:wheel**
 ```bash
 mcedit /etc/sudoers
 , %AU-TEAM\\hq
