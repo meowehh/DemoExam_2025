@@ -93,13 +93,13 @@ nmcli con modify CLI-NET \
 nmcli con down CLI-NET
 nmcli con up CLI-NET
 ```
-**Далее в консоли**:
+**Открываем снова GUI и запускаем терминал, там прописываем**:
 ```bash
 acc
 ```
 - Пароль toor
 - Выбрать Auth в Networking
-- Прописать в Domain au-team.irpo
-- Прописать в Workgroup au-team \
+- Прописать в Domain - au-team.irpo
+- Прописать в Workgroup - au-team \
 - Apply
 > Если вход в домен произошел, то - ОК!
