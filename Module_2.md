@@ -364,5 +364,101 @@ chronyc clients
 
 ### BR-SRV
 ```bash
-apt-get update && apt-get install openssh-server ansible sshpass -y
+apt-get update && apt-get install openssh-server ansible sshpass nano -y
 ```
+```bash
+nano /etc/ansible/hosts
+[Alt]
+192.168.2.1 ansible_ssh_user=net_admin ansible_ssh_pass=P@ssw0rd
+192.168.1.10 ansible_ssh_user=sshuser ansible_ssh_pass=P@ssw0rd
+192.168.2.10 ansible_ssh_user=sysadmin ansible_ssh_pass=P@ssw0rd
+192.168.3.1 ansible_ssh_user=net_admin ansible_ssh_pass=P@ssw0rd
+
+[Alt:vars]
+ansible_port=2024
+```
+```bash
+nano /etc/ansible/ansible.cfg
+[defaults]
+
+interpreter_python = /usr/bin/python3
+
+# some basic default values...
+# uncomment this to disable SSH key host checking
+host_key_checking = False
+```
+
+### HQ-SRV
+```bash
+apt-get update && apt-get install openssh-server -y
+```
+```bash
+vim /etc/openssh/sshd_config
+Port 2024
+MaxAuthTries 2
+AllowUsers sshuser
+```
+```bash
+systemctl enable --now sshd
+systemctl restart sshd
+```
+
+### HQ-RTR и BR-RTR
+```bash
+apt-get update && apt-get install openssh-server -y
+```
+```bash
+vim /etc/openssh/sshd_config
+Port 2024
+MaxAuthTries 2
+AllowUsers net_admin
+```
+```bash
+systemctl enable --now sshd
+systemctl restart sshd
+```
+
+### HQ-CLI 
+```bash
+apt-get update && apt-get install openssh-server -y
+```
+```bash
+useradd sysadmin
+passwd sysadmin
+P@ssw0rd
+usermod -a -G remote sysadmin
+```
+```bash
+vim /etc/openssh/sshd_config
+Port 2024
+MaxAuthTries 2
+AllowGroups wheel remote
+```
+```bash
+systemctl enable --now sshd
+systemctl restart sshd
+```
+
+### BR-SRV
+```bash
+ansible -m ping all
+```
+```bash
+192.168.3.1 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+192.168.2.1 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+192.168.1.10 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+192.168.2.10 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+```
+> ⚠️ 💡 **Важно**: Проверяем чтобы вывод команды совпадал, если все совпдает, значит задание выполнено верно.
