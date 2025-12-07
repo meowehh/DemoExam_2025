@@ -557,7 +557,7 @@ docker compose -f wiki.yml up -d
 - set up the wiki
 - 2 раза продолжить без изменений.
 - Database type - Mariadb
-- Database hose - mariadb
+- Database host - mariadb
 - Database name - mediawiki
 - Databse username - wiki
 - Databse password - WikiP@ssw0rd
