@@ -205,6 +205,7 @@ gpupdate -f # Прописываем 2 раза подряд чтобы кома
 
 ```bash
 sudo id
+P@ssw0rd
 sudo cat /root/.bashrc
 sudo cat /root/.bashrc | grep root
 ```
