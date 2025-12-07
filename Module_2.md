@@ -578,7 +578,7 @@ scp -P 2024 LocalSettings.php sshuser@192.168.3.10:/home/sshuser
 yes
 P@ssw0rd
 ```
-**Открываем старый терминал где уже установлено соединение SSH с BR-SRV:**
+**Открываем прошлый терминал где уже установлено соединение SSH с BR-SRV:**
 ```bash
 cd /home/sshuser
 cp LocalSettings.php ~
