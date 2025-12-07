@@ -546,7 +546,7 @@ volumes:
   images:
   db:
 ```
-**Запускаем docker и развертываем mediawiki:**:
+**Запускаем docker и развертываем mediawiki**:
 ```bash
 systemctl enable --now docker.service docker.socket
 docker compose -f wiki.yml up -d
