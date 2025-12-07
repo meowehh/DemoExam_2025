@@ -266,7 +266,7 @@ df -h
 lsblk
 ```
 ```bash
-apt-get install -y nfs-{server,utils}
+apt-get update && apt-get install -y nfs-{server,utils}
 mkdir /raid0/nfs
 chmod 766 /raid0/nfs
 ```
@@ -282,7 +282,7 @@ systemctl enable --now nfs-server.service
 ```
 ### HQ-CLI
 ```bash
-apt-get install -y nfs-{server,utils}
+apt-get update && apt-get install -y nfs-{server,utils}
 mkdir /mnt/nfs
 chmod 777 /mnt/nfs
 ```
