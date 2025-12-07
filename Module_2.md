@@ -753,3 +753,151 @@ shell: echo "P@ssw0rd"
 deploy moodle
 ```
 > Дожидаемся полной развертки, требуется хорошая и стабильная скорость интернета для завершения установки, занимает много времени.
+
+**Корректный вывод, в процессе установки выглядит так:**
+```bash
+Deploying moodle...
+Executing playbook moodle.yml
+
+- deploy Moodle on hosts: local -
+install Apache packages...
+  localhost done
+  localhost done
+  localhost done
+  localhost done
+check certificate file...
+  localhost ok
+generate certificate file...
+  localhost done
+enable Apache2 module filter...
+  localhost done
+enable Apache2 module ssl...
+  localhost done
+enable Apache2 module rewrite...
+  localhost done
+enable Apache2 module headers...
+  localhost done
+enable Apache2 module env...
+  localhost done
+enable Apache2 module dir...
+  localhost ok
+enable Apache2 module mime...
+  localhost ok
+enable Apache2 module mod_php8.2...
+  localhost ok
+disable Apache2 module mod_php7...
+  localhost ok
+enable HTTPS (default_https)...
+  localhost done
+enable HTTPS (https)...
+  localhost done
+configure port 80...
+  localhost done | msg: line added
+configure port 443...
+  localhost done | msg: line added
+change example server name...
+  localhost done | msg: 1 replacements made
+change _default_ placeholder for https...
+  localhost done | msg: 1 replacements made
+set port 80 for default server...
+  localhost done | msg: line replaced
+add RewriteEngine On...
+  localhost done | msg: line added
+add RewriteCond...
+  localhost done | msg: line added
+add RewriteRule...
+  localhost done | msg: line added
+detect PHP settings...
+  localhost ok
+configure PHP memory_limit setting...
+  localhost done
+configure PHP upload_max_filesize setting...
+  localhost done
+configure PHP max_input_vars setting...
+  localhost done
+reload Apache2 configuration...
+[WARNING]: Consider using the service module rather than running 'service'.  If you need to use command because service is insufficient you can add 'warn: false' to this command task or set
+'command_warnings=False' in ansible.cfg to get rid of this message.
+  localhost ok
+start Apache service...
+  localhost done
+detect HTTP DocumentRoot...
+  localhost ok | stdout: DocumentRoot for http: "/var/www/html"
+detect HTTPS DocumentRoot...
+  localhost ok | stdout: DocumentRoot for https: "/var/www/html"
+install MariaDB server packages...
+  localhost done | item: mariadb-server | msg: mariadb-server present(s)
+  localhost done
+start MariaDB service...
+  localhost done
+install Moodle packages...
+  localhost done | item: moodle | msg: moodle present(s)
+  localhost done | item: moodle-apache2 | msg: moodle-apache2 present(s)
+  localhost ok | msg: Nothing to install
+  localhost done | item: moodle-local-mysql | msg: moodle-local-mysql present(s)
+  localhost done | item: python3-module-pymysql | msg: python3-module-pymysql present(s)
+  localhost done | item: pwgen | msg: pwgen present(s)
+  localhost ok | msg: Nothing to install
+  localhost done
+check if database moodledb exists...
+  localhost done
+generate password for Moodle...
+  localhost ok
+create database user...
+  localhost done
+check for config file...
+  localhost ok
+generate configuration by install script from moodle...
+  localhost done
+reload Apache2 configuration...
+  localhost ok
+one try to open web page...
+  localhost ok
+Change password to Moodle for user admin...
+
+- Play recap -
+  localhost                  : ok=40   changed=27   unreachable=0    failed=0    rescued=0    ignored=0   
+Deploy complete successful.
+```
+> **⚠️ 💡 Важно!** Теперь необходимо проверить действительно ли создались все нужные в дальнейшем config файлы, иногда возникает баг при котором они должны были создаться, но не создались.
+
+**Проверка конфигов:**
+
+```bash
+vim /var/www/webapps/moodle/config.php 
+```
+> Открываем данный файл, если он есть и в нем есть содержимое, то значит все хорошо, если этого файла нет или он пустой, то запускаем команду deploy moodle ещё раз, после 2 раза config.php появляется всегда.
+
+Пример содержания этого файла на данном этапе:
+```bash
+<?php  // Moodle configuration file
+
+unset($CFG);
+global $CFG;
+$CFG = new stdClass();
+
+$CFG->dbtype    = 'mariadb';
+$CFG->dblibrary = 'native';
+$CFG->dbhost    = 'localhost';
+$CFG->dbname    = 'moodledb';
+$CFG->dbuser    = 'moodle';
+$CFG->dbpass    = 'P@ssw0rd';
+$CFG->prefix    = 'mdl_';
+$CFG->dboptions = array (
+  'dbpersist' => 0,
+  'dbport' => '',
+  'dbsocket' => '',
+  'dbcollation' => 'utf8mb4_unicode_ci',
+);
+
+$CFG->wwwroot   = 'https://HQ-SRV.au-team.irpo/moodle';
+$CFG->dataroot  = '/var/lib/moodle/default';
+$CFG->admin     = 'admin';
+
+$CFG->directorypermissions = 02770;
+
+require_once(__DIR__ . '/lib/setup.php');
+
+// There is no php closing tag in this file,
+// it is intentional because it prevents trailing whitespace problems!
+```
