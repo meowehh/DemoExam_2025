@@ -355,7 +355,7 @@ timedatectl set-local-rtc yes
 ```bash
 apt-get update && apt-get install -y chrony
 vim /etc/chrony.conf
-pool 192.168.10.1 iburst prefer
+pool 192.168.1.1 iburst prefer
 systemctl restart chronyd
 systemctl enable --now chronyd
 timedatectl set-timezone Asia/Novosibirsk
