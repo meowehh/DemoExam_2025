@@ -359,7 +359,6 @@ pool 192.168.1.1 iburst prefer
 systemctl restart chronyd
 systemctl enable --now chronyd
 timedatectl set-timezone Asia/Novosibirsk
-timedatectl set-local-rtc yes
 ```
 > ⚠️ 💡 **Примечание**: На HQ-CLI уже будет сервер времени, нужно лишь добавить новый pool.
 
