@@ -349,7 +349,7 @@ allow 0/0
 systemctl restart chronyd
 systemctl enable --now chronyd
 timedatectl set-timezone Asia/Novosibirsk
-timedatectl set-local rtc yes
+timedatectl set-local-rtc yes
 ```
 В качестве клиентов настроим: HQ-SRV, HQ-CLI, BR-RTR, BR-SRV, выполнить настройку нужно идентично нижней на всех 4-ех клиентах.
 ```bash
