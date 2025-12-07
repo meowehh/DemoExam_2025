@@ -512,7 +512,7 @@ toor
 mcedit wiki.yml
 ```
 **Вставляем скопированный конфиг, теперь можно закрыть Яндекс браузер. Далее приводим файл wiki.yml к следующему виду**
-```
+```bash
 # MediaWiki with MariaDB
 #
 # Access via "http://localhost:8080"
