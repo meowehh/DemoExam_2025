@@ -505,7 +505,7 @@ systemctl restart sshd
 ```bash
 su -
 toor
-ssh sshuser@192.168.3.10 -p 2024
+ssh sshuser@192.168.3.10 -p 2024 # Заходим на BR-SRV
 P@ssw0rd
 su -
 toor
@@ -545,4 +545,9 @@ services:
 volumes:
   images:
   db:
+```
+**Запускаем docker и развертываем mediawiki**:
+```bash
+systemctl enable --now docker.service docker.socket
+docker compose -f wiki.yml up -d
 ```
