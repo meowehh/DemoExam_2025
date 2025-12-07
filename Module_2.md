@@ -478,3 +478,35 @@ ansible -m ping all
 - Разверните 
 - Он должен создавать базу с названием mediawiki, доступную по стандартному порту, пользователя wiki с паролем WikiP@ssw0rd должен иметь права доступа к этой базе данных 
 - MediaWiki должна быть доступна извне через порт 8080.
+
+### BR-SRV
+```bash
+apt-get update && apt-get install openssh-server docker-ce docker-compose -y
+```
+**Настроим и запустим SSH, - чтобы в дальнейшем перебросить файл конфига mediawiki с HQ-CLI на BR-SRV**:
+```bash
+vim /etc/openssh/sshd_config
+Port 2024
+MaxAuthTries 2
+AllowUsers sshuser
+```
+```bash
+systemctl enable --now sshd
+systemctl restart sshd
+```
+### HQ-CLI
+
+- Запускаем Яндекс браузер, который установили ранее. Через Firefox не будет работать.
+- Переходим на сайт hub.docker.com
+- В поиске вбиваем mediawiki
+- На странице с mediawiki листаем вниз и находим конфиг .yml
+- Копируем конфиг
+- Запускаем терминал
+```bash
+su -
+toor
+ssh sshuser@192.168.3.10 -p 2024
+P@ssw0rd
+mcedit wiki.yml
+```
+**Вставляем скопированный конфиг, теперь можно закрыть Яндекс браузер.**
