@@ -279,6 +279,7 @@ mcedit /etc/exports
 ```bash
 exportfs -arv
 systemctl enable --now nfs-server.service
+systemctl restart nfs-server.service
 ```
 ### HQ-CLI
 ```bash
@@ -289,6 +290,8 @@ chmod 777 /mnt/nfs
 ```bash
 mcedit /etc/fstab
 192.168.1.10:/raid0/nfs	/mnt/nfs	nfs	defaults	0	0
+systemctl enable --now nfs-server.service
+systemctl restart nfs-server.service
 ```
 **Монтируем файловую систему и делаем финальную проверку RAID 0**:
 ```bash
