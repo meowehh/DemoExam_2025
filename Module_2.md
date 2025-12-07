@@ -102,6 +102,7 @@ acc
 - Прописать в Domain - au-team.irpo
 - Прописать в Workgroup - au-team
 - Apply
+- Login: Administator, Password: P@ssw0rd
 > Если вход в домен произошел, то - ОК!
 
 ### BR-SRV
