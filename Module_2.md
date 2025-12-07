@@ -62,7 +62,7 @@ password: toor
 - Переходим по адресу 192.168.3.10:8081
 - Вкладка Domain
 - Выбираем Active Directory Domain Controller
-- DNS Forwards - 192.168.1.10
+- DNS Forwarders - 192.168.1.10
 - Domain - au-team.irpo
 - Password - P@ssw0rd
 - Apply
