@@ -731,4 +731,24 @@ Chain OUTPUT (policy ACCEPT 6 packets, 464 bytes)
 
 ### HQ-SRV
 ```bash
+apt-get update && apt-get install deploy -y
 ```
+```bash
+mcedit /usr/share/deploy/moodle/tasks/main.yml
+```
+**Жмем F2, входим в режим Replace.**
+- Заменяем все moodle1 на moodledb, - 4 замены.
+- И так же заменяем все moodleuser на moodle, - 2 замены.
+**Ищем строку:**
+```bash
+shell: pwgen 16 1
+```
+**Заменяем на:**
+```bash
+shell: echo "P@ssw0rd"
+```
+> Сохраняем изменения, запускаем развертку moodle.
+```bash
+deploy moodle
+```
+> Дожидаемся полной развертки, требуется хорошая и стабильная скорость интернета для завершения установки, занимает много времени.
