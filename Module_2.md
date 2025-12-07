@@ -546,8 +546,58 @@ volumes:
   images:
   db:
 ```
-**Запускаем docker и развертываем mediawiki**:
+**Запускаем docker и развертываем mediawiki:**:
 ```bash
 systemctl enable --now docker.service docker.socket
 docker compose -f wiki.yml up -d
 ```
+> Дожидаемся завершения.
+
+- Открываем Firefox, переходим по 192.168.3.10:8086
+- set up the wiki
+- 2 раза продолжить без изменений.
+- Database type - Mariadb
+- Database hose - mariadb
+- Database name - mediawiki
+- Databse username - wiki
+- Databse password - WikiP@ssw0rd
+- Use the same account as for installation
+- URL host name - wiki
+- Project namespace - as the wiki name: wiki
+- Administation account:
+- User: wiki
+- Password: WikiP@ssw0rd
+- Do NOT share data about this installation
+- I'm bored already, just install the wiki
+- Жмем продолжить до того момента как не скачается LocalSettings.php
+
+**Запускаем ещё один терминал:**
+```bash
+cd Downloads/
+scp -P 2024 LocalSettings.php sshuser@192.168.3.10:/home/sshuser
+yes
+P@ssw0rd
+```
+**Открываем старый терминал где уже установлено соединение SSH с BR-SRV:**
+```bash
+cd /home/sshuser
+cp LocalSettings.php ~
+cd ~
+```
+```bash
+docker compose -f wiki.yml down
+```
+**Убираем комментирование этой строки:**
+```bash
+mcedit wiki.yml
+- ./LocalSettings.php:/var/www/html/LocalSettings.php
+```
+**Ищем указанную строку и меняем ее на данную:**
+```bash
+mcedit LocalSettings.php
+$wgServer = "http://192.168.3.10:8086";
+```
+```bash
+docker compose -f wiki.yml up -d
+```
+> Сайт должен открываться по 192.168.3.10:8086, если все работает значит настроено верно, пробуем авторизоваться как пользователь: wiki, с паролем WikiP@ssw0rd. Если получилось, задание выполнено верно.
