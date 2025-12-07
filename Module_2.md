@@ -511,4 +511,38 @@ su -
 toor
 mcedit wiki.yml
 ```
-**Вставляем скопированный конфиг, теперь можно закрыть Яндекс браузер.**
+**Вставляем скопированный конфиг, теперь можно закрыть Яндекс браузер. Далее приводим файл wiki.yml к следующему виду**
+```
+# MediaWiki with MariaDB
+#
+# Access via "http://localhost:8080"
+services:
+  wiki:
+    image: mediawiki
+    restart: always
+    ports:
+      - 8086:80
+    links:
+      - mariadb
+    volumes:
+      - images:/var/www/html/images
+      # After initial setup, download LocalSettings.php to the same directory as
+      # this yaml and uncomment the following line and use compose to restart
+      # the mediawiki service
+      # - ./LocalSettings.php:/var/www/html/LocalSettings.php
+  mariadb: # <- This key defines the name of the database during setup
+    image: mariadb
+    restart: always
+    environment:
+      # @see https://phabricator.wikimedia.org/source/mediawiki/browse/master/includes
+      MYSQL_DATABASE: mediawiki
+      MYSQL_USER: wiki
+      MYSQL_PASSWORD: WikiP@ssw0rd
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+    volumes:
+      - db:/var/lib/mysql
+
+volumes:
+  images:
+  db:
+```
