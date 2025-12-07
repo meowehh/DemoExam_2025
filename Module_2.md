@@ -263,6 +263,7 @@ mcedit /etc/fstab
 ```bash
 mount -a
 df -h
+lsblk
 ```
 ```bash
 apt-get install -y nfs-{server,utils}
