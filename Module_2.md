@@ -584,7 +584,7 @@ docker compose -f wiki.yml up -d
 - Открываем Firefox, переходим по 192.168.3.10:8086
 - set up the wiki
 - 2 раза продолжить без изменений.
-- Database type - Mariadb
+- Database type - mariadb
 - Database host - mariadb
 - Database name - mediawiki
 - Databse username - wiki
