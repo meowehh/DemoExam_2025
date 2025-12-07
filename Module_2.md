@@ -612,4 +612,109 @@ docker compose -f wiki.yml up -d
 
 ### BR-RTR
 ```bash
+apt-get update && apt-get install iptables -y
 ```
+```bash
+iptables -t nat -A PREROUTING -p tcp --dport 80 -j DNAT --to-destination 192.168.3.10:8086
+iptables -A FORWARD -p tcp -d 192.168.3.10 --dport 8086 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+
+iptables -t nat -A PREROUTING -p tcp --dport 3015 -j DNAT --to-destination 192.168.3.10:3015
+iptables -A FORWARD -p tcp -d 192.168.3.10 --dport 3015 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+```
+```bash
+iptables-save > /etc/sysconfig/iptables
+systemctl restart iptables
+systemctl enable --now iptables
+```
+**Выполним проверку**:
+```bash
+iptables -t nat -L -n -v
+```
+**Получаем вывод**:
+```bash
+Chain PREROUTING (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 DNAT       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:80 to:192.168.3.10:8086
+    0     0 DNAT       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:3015 to:192.168.3.10:3015
+
+Chain INPUT (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain OUTPUT (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain POSTROUTING (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination 
+```
+**Повторим проверку**:
+```bash
+iptables -L -n -v
+```
+**Сверяем вывод с моим**:
+```bash
+Chain INPUT (policy ACCEPT 4 packets, 320 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            192.168.3.10         tcp dpt:8086 state NEW,RELATED,ESTABLISHED
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            192.168.3.10         tcp dpt:3015 state NEW,RELATED,ESTABLISHED
+
+Chain OUTPUT (policy ACCEPT 6 packets, 480 bytes)
+ pkts bytes target     prot opt in     out     source               destination
+```
+
+### HQ-RTR
+```bash
+apt-get update && apt-get install iptables -y
+```
+```bash
+iptables -t nat -A PREROUTING -p tcp --dport 80 -j DNAT --to-destination 192.168.1.10:80
+iptables -A FORWARD -p tcp -d 192.168.1.10 --dport 80 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+
+iptables -t nat -A PREROUTING -p tcp --dport 3015 -j DNAT --to-destination 192.168.1.10:3015
+iptables -A FORWARD -p tcp -d 192.168.1.10 --dport 3015 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+```
+```bash
+iptables-save > /etc/sysconfig/iptables
+systemctl restart iptables
+systemctl enable --now iptables
+```
+**Выполним проверку**:
+```bash
+iptables -t nat -L -n -v
+```
+**Получаем вывод**:
+```bash
+Chain PREROUTING (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 DNAT       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:80 to:192.168.1.10:80
+    0     0 DNAT       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            tcp dpt:3015 to:192.168.1.10:3015
+
+Chain INPUT (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain OUTPUT (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain POSTROUTING (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination 
+```
+**Повторим проверку**:
+```bash
+iptables -L -n -v
+```
+**Сверяем вывод с моим**:
+```bash
+Chain INPUT (policy ACCEPT 8 packets, 624 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain FORWARD (policy ACCEPT 6 packets, 456 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            192.168.1.10         tcp dpt:80 state NEW,RELATED,ESTABLISHED
+    0     0 ACCEPT     tcp  --  *      *       0.0.0.0/0            192.168.1.10         tcp dpt:3015 state NEW,RELATED,ESTABLISHED
+
+Chain OUTPUT (policy ACCEPT 6 packets, 464 bytes)
+ pkts bytes target     prot opt in     out     source               destination 
+```
+> Если вывод совпадает, задание выполнено верно.
