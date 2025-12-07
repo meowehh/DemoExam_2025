@@ -762,7 +762,7 @@ apt-get update && apt-get install deploy -y
 ```bash
 mcedit /usr/share/deploy/moodle/tasks/main.yml
 ```
-**Жмем F2, входим в режим Replace.**
+**Жмем F4, входим в режим Replace.**
 - Заменяем все moodle1 на moodledb, - 4 замены.
 - И так же заменяем все moodleuser на moodle, - 2 замены.
   
