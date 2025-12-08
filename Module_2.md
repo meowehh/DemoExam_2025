@@ -1085,7 +1085,7 @@ $wgServer = "http://wiki.au-team.irpo:8086";
 docker compose -f wiki.yml up -d
 ```
 ### HQ-CLI
-**Настроим переадресацию на ISP**:
+**Настроим переадресацию на ISP:**
 ```bash
 su -
 toor
@@ -1093,6 +1093,7 @@ mcedit /etc/hosts # Добавляем строки
 172.16.4.1      moodle.au-team.irpo moodle
 172.16.5.1      wiki.au-team.irpo wiki
 ```
+**Вернем авторизацию через домен:**
 ```bash
 nmcli connection modify CLI-NET \
 ipv4.ignore-auto-dns yes \
