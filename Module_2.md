@@ -1065,3 +1065,46 @@ systemctl status nginx
              ├─5777 "nginx: worker process"
              └─5779 "nginx: worker process"
 ```
+### HQ-SRV
+```bash
+vim /var/www/webapps/moodle/config.php
+$CFG->wwwroot   = 'http://moodle.au-team.irpo/moodle';
+```
+```bash
+systemctl restart httpd2
+```
+### BR-SRV
+```bash
+docker compose -f wiki.yml down
+```
+```bash
+mcedit LocalSettings.php
+$wgServer = "http://wiki.au-team.irpo:8086";
+```
+```bash
+docker compose -f wiki.yml up -d
+```
+### HQ-CLI
+```bash
+su -
+toor
+mcedit /etc/hosts # Добавляем строки
+172.16.4.1      moodle.au-team.irpo moodle
+172.16.5.1      wiki.au-team.irpo wiki
+```
+```bash
+nmcli connection modify CLI-NET \
+ipv4.ignore-auto-dns yes \
+ipv4.dns 192.168.3.10
+```
+```bash
+nmcli connection down CLI-NET
+nmcli connection up CLI-NET
+```
+**Открываем Firefox:**
+- Переходим на http://moodle.au-team.irpo/moodle
+- Переходим на http://wiki.au-team.irpo:8086
+
+> ⚠️ 💡 **Важно**: Если оба сайта открылись без редиректа на http://hq-srv.au-team.irpo/moodle и 192.168.3.10:8086 (адрес в строке поиска остался тот же), значит все выполенено верно.
+
+> Демонстрационный экзамен базового уровня полностью выполнен, готовый отчет можно взять [тут.](./report_2025.docx)
