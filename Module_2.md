@@ -339,7 +339,8 @@ apt-get update && apt-get install -y chrony
 ```
 ```bash
 vim /etc/chrony.conf
-pool 127.0.0.1 iburst prefer
+pool ntp0.ntp-servers.net iburst prefer
+pool 127.0.0.1 iburst 
 hwtimestamp *
 local stratum 5
 allow 0/0
@@ -349,7 +350,6 @@ allow 0/0
 systemctl restart chronyd
 systemctl enable --now chronyd
 timedatectl set-timezone Asia/Novosibirsk
-timedatectl set-local-rtc yes
 ```
 В качестве клиентов настроим: HQ-SRV, HQ-CLI, BR-RTR, BR-SRV, выполнить настройку нужно идентично нижней на всех 4-ех клиентах.
 ```bash
