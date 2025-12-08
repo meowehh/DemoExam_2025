@@ -956,7 +956,7 @@ cp /etc/nginx/sites-available.d/default.conf /etc/nginx/sites-available.d/moodle
 ```bash
 nano /etc/nginx/sites-available.d/moodle.conf
 upstream moodle.au-team.irpo {
-        server 192.168.1.10;
+        server 172.16.4.4;
 }
 server {
         listen  80;
@@ -997,7 +997,7 @@ cp /etc/nginx/sites-available.d/moodle.conf /etc/nginx/sites-available.d/wiki.co
 ```bash
 nano /etc/nginx/sites-available.d/wiki.conf
 upstream wiki.au-team.irpo {
-        server 192.168.3.10:80;
+        server 172.16.5.5:80;
 }
 server {
         listen  8086;
