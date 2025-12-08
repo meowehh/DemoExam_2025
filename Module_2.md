@@ -1085,6 +1085,7 @@ $wgServer = "http://wiki.au-team.irpo:8086";
 docker compose -f wiki.yml up -d
 ```
 ### HQ-CLI
+**Настроим переадресацию на ISP**:
 ```bash
 su -
 toor
