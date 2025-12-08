@@ -948,5 +948,120 @@ nmcli connection modify CLI-NET \
 
 ### ISP
 ```bash
-apt-get update && apt-get install nginx -y
+apt-get update && apt-get install nginx nano -y
+```
+```bash
+cp /etc/nginx/sites-available.d/default.conf /etc/nginx/sites-available.d/moodle.conf
+```
+```bash
+nano /etc/nginx/sites-available.d/moodle.conf
+upstream moodle.au-team.irpo {
+        server 192.168.1.10;
+}
+server {
+        listen  80;
+        server_name _;
+
+        location / {
+                # root /var/www/html;
+
+                # autoindex off;
+                # autoindex_exact_size on;
+                # autoindex_localtime off;
+
+                # expires off;
+
+                # cooperate with mod_realip in apache-1.3 or mod_rpaf in apache-2.x
+                #       proxy_redirect off;
+                #       proxy_set_header Host $host;
+                #       proxy_set_header X-Real-IP $remote_addr;
+                #       proxy_set_header X-Forwarded-For $remote_addr;
+                        proxy_pass http://moodle.au-team.irpo;
+                #
+                # NB: it's better for URI canonicalization that apache sits on :80
+                # (even if that's only 127.0.0.1:80)
+                #
+                # see also set_real_ip_from, real_ip_header if this nginx
+                # would need to cooperate with another one acting as a frontend
+        }
+
+#               charset         on;
+#               source_charset  koi8-r;
+
+#               access_log  /var/log/nginx/access.log;
+}
+```
+```bash
+cp /etc/nginx/sites-available.d/moodle.conf /etc/nginx/sites-available.d/wiki.conf
+```
+```bash
+nano /etc/nginx/sites-available.d/wiki.conf
+upstream wiki.au-team.irpo {
+        server 192.168.3.10:80;
+}
+server {
+        listen  8086;
+        server_name _;
+
+        location / {
+                # root /var/www/html;
+
+                # autoindex off;
+                # autoindex_exact_size on;
+                # autoindex_localtime off;
+
+                # expires off;
+
+                # cooperate with mod_realip in apache-1.3 or mod_rpaf in apache-2.x
+                #       proxy_redirect off;
+                #       proxy_set_header Host $host;
+                #       proxy_set_header X-Real-IP $remote_addr;
+                #       proxy_set_header X-Forwarded-For $remote_addr;
+                        proxy_pass http://wiki.au-team.irpo;
+                #
+                # NB: it's better for URI canonicalization that apache sits on :80
+                # (even if that's only 127.0.0.1:80)
+                #
+                # see also set_real_ip_from, real_ip_header if this nginx
+                # would need to cooperate with another one acting as a frontend
+        }
+
+#               charset         on;
+#               source_charset  koi8-r;
+
+#               access_log  /var/log/nginx/access.log;
+}
+```
+```bash
+ln -s /etc/nginx/sites-available.d/moodle.conf /etc/nginx/sites-enabled.d/moodle.conf
+ln -s /etc/nginx/sites-available.d/wiki.conf /etc/nginx/sites-enabled.d/wiki.conf
+```
+```bash
+systemctl restart nginx
+systemctl reload nginx
+systemctl enable --now nginx
+```
+```bash
+systemctl status nginx
+```
+```bash
+● nginx.service - The nginx HTTP and reverse proxy server
+     Loaded: loaded (/usr/lib/systemd/system/nginx.service; enabled; preset: disabled)
+     Active: active (running) since Mon 2025-12-08 00:35:22 UTC; 1min 14s ago
+   Main PID: 5749 (nginx)
+      Tasks: 11 (limit: 1142)
+     Memory: 9.1M (peak: 18.8M)
+        CPU: 50ms
+     CGroup: /system.slice/nginx.service
+             ├─5749 "nginx: master process /usr/sbin/nginx -g daemon off;"
+             ├─5768 "nginx: worker process"
+             ├─5770 "nginx: worker process"
+             ├─5771 "nginx: worker process"
+             ├─5772 "nginx: worker process"
+             ├─5773 "nginx: worker process"
+             ├─5774 "nginx: worker process"
+             ├─5775 "nginx: worker process"
+             ├─5776 "nginx: worker process"
+             ├─5777 "nginx: worker process"
+             └─5779 "nginx: worker process"
 ```
