@@ -976,7 +976,7 @@ server {
                 #       proxy_set_header Host $host;
                 #       proxy_set_header X-Real-IP $remote_addr;
                 #       proxy_set_header X-Forwarded-For $remote_addr;
-                        proxy_pass http://moodle.au-team.irpo;
+                        proxy_pass http://moodle.au-team.irpo/moodle;
                 #
                 # NB: it's better for URI canonicalization that apache sits on :80
                 # (even if that's only 127.0.0.1:80)
