@@ -167,10 +167,12 @@ vim /etc/net/ifaces/ens19.20/options
 BOOTPROTO=static
 TYPE=vlan
 VID=20
+HOST=ens19
 vim /etc/net/ifaces/ens19.99/options
 BOOTPROTO=static
 TYPE=vlan
 VID=99
+HOST=ens19
 ```
 ```bash
 vim /etc/net/ifaces/ens18/ipv4route
