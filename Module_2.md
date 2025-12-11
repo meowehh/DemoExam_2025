@@ -153,7 +153,7 @@ SHELLCMD
 ## Groups of users.  These may consist of user names, uids, Unix groups,
 ## or netgroups.
 # User_Alias ADMINS = millert, dowdy, mikef
-User_Alias WHEEL_USERS = %wheel, AU-TEAM\\hq # Первая строка
+User_Alias WHEEL_USERS = %wheel, %AU-TEAM\\hq # Первая строка
 User_Alias XGRP_USERS = %xgrp
 # User_Alias SUDO_USERS = %sudo
 
